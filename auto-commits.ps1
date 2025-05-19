@@ -24,7 +24,7 @@ if (-not (Test-Path -Path "README.md")) {
     "# OasisQuestPlate - Premium Tunisian Date Store" | Out-File -FilePath "README.md"
     git add "README.md"
     git commit -m "Add README file"
-    git push -u origin master
+    git push -u origin main
 }
 
 # Function to make a small change and commit
@@ -73,10 +73,8 @@ function Make-CommitChange {
             $newContent | Set-Content -Path $randomFile.FullName            git add $randomFile.FullName
             git commit -m "Update ${commitNumber} - Improved documentation in $($randomFile.Name)"
         }
-    }
-
-    # Push after each commit
-    git push origin master
+    }    # Push after each commit
+    git push origin main
     
     # Wait a bit between commits
     Start-Sleep -Seconds 2

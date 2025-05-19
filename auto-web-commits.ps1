@@ -88,10 +88,8 @@ function Make-WebsiteCommit {
               git add $homePagePath
             git commit -m "Update ${commitNumber} - Enhanced organic farming description"
         }
-    }
-
-    # Push after each commit
-    git push origin master
+    }    # Push after each commit
+    git push origin main
     
     # Wait a bit between commits
     Start-Sleep -Seconds 2
