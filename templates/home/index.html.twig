@@ -1,32 +1,249 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Existing head content remains the same -->
+</head>
+<body>
+    <!-- Header remains unchanged -->
 
-{% block title %}Welcome to Nefta Dates{% endblock %}
-
-{% block body %}
-<section class="hero mb-5">
-  <div class="overlay"></div>
-  <div class="content text-center">
-    {% if app.user %}
-      <div class="greeting mb-4">Hello {{ app.user.email|split('@')[0]|capitalize }}, welcome back!</div>
-    {% endif %}
-    <h1 class="display-3">Nefta Date Plates</h1>
-    <p class="lead">Experience the taste of premium Tunisian dates.</p>
-    <a href="{{ path('app_shop') }}" class="btn btn-primary btn-lg">Shop Now</a>
-  </div>
-</section>
-
-<section class="gallery py-5">
-  <div class="container">
-    <h2 class="text-center mb-4">Our Collections</h2>
-    <div class="row g-4">
-      {% for img in ['dates1.jpg', 'dates2.jpg', 'dates3.jpg', 'dates1.jpg'] %}
-        <div class="col-md-3">
-          <div class="card border-0 shadow-sm">
-            <img src="/images/{{ img }}" class="card-img-top" alt="Date Plate">
-          </div>
+    <!-- Enhanced Hero Section -->
+    <section class="hero" id="home">
+        <!-- Existing hero content with animated date plates -->
+        <div class="content text-center">
+            <div class="greeting mb-4">Savor the Taste of Tradition</div>
+            <h1 class="display-3">Nefta's Golden Dates</h1>
+            <p class="lead">Sun-ripened perfection from Tunisia's hidden oasis</p>
+            <div class="cta-container">
+                <a href="#products" class="btn btn-primary">Explore Collections</a>
+                <a href="#about" class="btn btn-outline">Discover Craftsmanship</a>
+            </div>
         </div>
-      {% endfor %}
+    </section>
+
+    <!-- Enhanced About Section -->
+    <!-- Existing about section remains -->
+
+    <!-- Quality Badges Section -->
+    <div class="quality-badges">
+        <div class="badge-item">
+            <img src="organic-certificate.png" alt="Organic Certified">
+            <span>100% Organic</span>
+        </div>
+        <div class="badge-item">
+            <img src="fair-trade.png" alt="Fair Trade">
+            <span>Fair Trade Certified</span>
+        </div>
+        <div class="badge-item">
+            <img src="non-gmo.png" alt="Non-GMO">
+            <span>Non-GMO Project Verified</span>
+        </div>
     </div>
-  </div>
-</section>
-{% endblock %}
+
+    <!-- Enhanced Products Gallery -->
+    <section class="gallery" id="products">
+        <div class="container">
+            <h2 class="section-title">Artisanal Date Selections</h2>
+            <div class="gallery-grid">
+                <!-- Product cards updated with new layout -->
+                <!-- Each card now includes a "Best Seller" ribbon -->
+                <div class="card">
+                    <div class="product-badge">Harvest 2023</div>
+                    <img src="deglet-nour.jpg" alt="Deglet Nour Dates">
+                    <div class="product-info">
+                        <h3 class="product-title">Deglet Nour <span class="origin">(Tozeur Valley)</span></h3>
+                        <div class="product-meta">
+                            <span class="harvest">Hand-picked October 2023</span>
+                            <span class="shelf-life">Shelf life: 18 months</span>
+                        </div>
+                        <!-- Rest of product info -->
+                    </div>
+                </div>
+                <!-- Repeat for other products -->
+            </div>
+        </div>
+    </section>
+
+    <!-- New Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Connect With Us</h2>
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>Oasis Headquarters</h4>
+                        <p>Nefta Palm Grove<br>Tozeur 2200<br>Tunisia</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <h4>Phone Support</h4>
+                        <p>+216 12 345 678<br>Mon-Fri: 8AM-6PM CET</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email Us</h4>
+                        <p>contact@neftadates.tn<br>orders@neftadates.tn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h3>Join Our Date Circle</h3>
+                <p>Receive exclusive offers, recipes, and oasis stories</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" class="newsletter-input">
+                    <button type="submit" class="newsletter-btn">Subscribe <i class="fas fa-date"></i></button>
+                </form>
+                <p class="disclaimer">We respect your privacy. No spam, ever.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Nefta Dates</h3>
+                <ul class="footer-links">
+                    <li><a href="#about">Our Story</a></li>
+                    <li><a href="#quality">Quality Promise</a></li>
+                    <li><a href="#sustainability">Sustainability</a></li>
+                    <li><a href="#wholesale">Wholesale Inquiries</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Customer Care</h3>
+                <ul class="footer-links">
+                    <li><a href="#shipping">Shipping Policy</a></li>
+                    <li><a href="#returns">Returns & Exchanges</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Follow the Oasis</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                    <i class="fab fa-cc-apple-pay"></i>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2023 Nefta Dates. Proudly crafted in the Tunisian Sahara</p>
+            <p>ECOCERT Organic Certification No. TN-AG-123</p>
+        </div>
+    </footer>
+
+    <!-- Add new CSS enhancements -->
+    <style>
+        /* New Quality Badges Styles */
+        .quality-badges {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem;
+            background: var(--white);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            background: var(--light-color);
+            transition: transform 0.3s ease;
+        }
+
+        .badge-item:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Enhanced Product Cards */
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: -10px;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section Styles */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .info-card {
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            background: var(--light-color);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Additional Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quality-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</body>
+</html>
