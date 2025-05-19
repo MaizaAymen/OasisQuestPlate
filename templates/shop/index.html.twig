@@ -3,24 +3,123 @@
 {% block title %}Shop - Nefta Dates{% endblock %}
 
 {% block body %}
-<div class="row">
-    {% for product in products %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="/{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.description|slice(0, 100) }}...</p>
-                    <p class="card-text fw-bold mt-auto">{{ product.price }} TND</p>
-                    <div class="mt-2">
-                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-outline-primary btn-sm">View</a>
-                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary btn-sm">Add to Cart</a>
+<section class="gallery" id="products">
+    <div class="container">
+        <h2 class="section-title">Our Premium Collections</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% for product in products %}
+                <div class="col mb-4">
+                    <div class="card h-100">
+                        <img src="/{{ product.image }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="product-info">
+                            <h3 class="product-title">{{ product.name }}</h3>
+                            <div class="product-rating">
+                                {% for i in 1..5 %}
+                                    {% if i <= 4 %}
+                                        <i class="fas fa-star"></i>
+                                    {% elseif i <= 4.5 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="product-description">{{ product.description|slice(0, 60) }}{% if product.description|length > 60 %}...{% endif %}</p>
+                            <p class="product-price">{{ product.price }} TND</p>
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-outline-primary" style="flex: 0.48;">View</a>
+                                <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary add-to-cart" style="flex: 0.48;">Add to Cart</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i> No products available yet. Please check back soon!
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% else %}
-        <p>No products available.</p>
-    {% endfor %}
-</div>
+    </div>
+</section>
+
+<style>
+    .gallery {
+        padding: 5rem 0;
+        background-color: var(--white);
+    }
+    
+    .product-info {
+        padding: 1.5rem;
+    }
+    
+    .product-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+    }
+    
+    .product-price {
+        font-weight: 700;
+        color: var(--primary-color);
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .product-rating {
+        color: #f8c822;
+        margin-bottom: 1rem;
+    }
+    
+    .product-description {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+    
+    .add-to-cart {
+        display: inline-block;
+        padding: 0.5rem;
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+    }
+    
+    .add-to-cart:hover {
+        background-color: var(--secondary-color);
+    }
+    
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                const originalText = this.innerHTML;
+                this.innerHTML = 'Added!';
+                this.style.backgroundColor = 'var(--secondary-color)';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                    this.style.backgroundColor = 'var(--primary-color)';
+                }, 2000);
+            });
+        });
+    });
+</script>
 {% endblock %}

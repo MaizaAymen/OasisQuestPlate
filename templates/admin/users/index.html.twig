@@ -3,51 +3,336 @@
 {% block title %}Admin - User Management{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>User Management</h1>
-    
-    <div class="mb-4">
-        <a href="{{ path('admin_product_index') }}" class="btn btn-secondary">Back to Products</a>
+<section class="admin-section py-5">
+  <div class="container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title mb-0">User Management</h2>
+        <p class="text-muted">Manage your customer accounts</p>
+      </div>
+      <div>
+        <a href="{{ path('admin_product_index') }}" class="btn" style="background-color: var(--secondary-color); color: white;">
+          <i class="fas fa-box me-2"></i> Product Management
+        </a>
+      </div>
     </div>
     
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">All Users</h5>
+    <div class="row mb-4">
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 me-3">
+                <div class="stat-icon" style="width: 48px; height: 48px; background-color: rgba(212, 167, 98, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-users" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                </div>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Total Users</h6>
+                <h4 class="mb-0">{{ users|length }}</h4>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Email</th>
-                        <th>Roles</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.id }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                {% for role in user.roles %}
-                                    <span class="badge bg-{% if role == 'ROLE_ADMIN' %}danger{% elseif role == 'ROLE_USER' %}success{% else %}secondary{% endif %}">
-                                        {{ role }}
-                                    </span>
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <a href="{{ path('admin_user_details', {'id': user.id}) }}" class="btn btn-info btn-sm">View Details</a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="text-center">No users found</td>
-                        </tr>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 me-3">
+                <div class="stat-icon" style="width: 48px; height: 48px; background-color: rgba(74, 44, 18, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-user-shield" style="font-size: 1.5rem; color: var(--secondary-color);"></i>
+                </div>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Admin Users</h6>
+                <h4 class="mb-0">
+                  {% set adminCount = 0 %}
+                  {% for user in users %}
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                      {% set adminCount = adminCount + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ adminCount }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 me-3">
+                <div class="stat-icon" style="width: 48px; height: 48px; background-color: rgba(40, 167, 69, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-user-check" style="font-size: 1.5rem; color: #28a745;"></i>
+                </div>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Active Users</h6>
+                <h4 class="mb-0">
+                  {% set activeCount = 0 %}
+                  {% for user in users %}
+                    {% if user.isActive is not defined or user.isActive %}
+                      {% set activeCount = activeCount + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ activeCount }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="flex-shrink-0 me-3">
+                <div class="stat-icon" style="width: 48px; height: 48px; background-color: rgba(220, 53, 69, 0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-user-clock" style="font-size: 1.5rem; color: #dc3545;"></i>
+                </div>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">New This Month</h6>
+                <h4 class="mb-0">
+                  {% set newUsers = 0 %}
+                  {% for user in users %}
+                    {% if user.createdAt is defined and user.createdAt|date('m-Y') == "now"|date('m-Y') %}
+                      {% set newUsers = newUsers + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ newUsers }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card shadow-sm border-0">
+      <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-users me-2"></i> User Accounts</h5>
+          <div class="input-group" style="max-width: 300px;">
+            <input type="text" id="userSearch" class="form-control" placeholder="Search users...">
+            <span class="input-group-text" style="background-color: var(--primary-color); color: white;">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead style="background-color: var(--light-color);">
+              <tr>
+                <th class="ps-3">ID</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Registration Date</th>
+                <th class="text-end pe-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+                <tr>
+                  <td class="ps-3">{{ user.id }}</td>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle me-3" style="width: 45px; height: 45px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: 500;">
+                        {{ user.firstName is defined ? user.firstName|slice(0, 1)|upper : user.email|slice(0, 1)|upper }}{{ user.lastName is defined ? user.lastName|slice(0, 1)|upper : '' }}
+                      </div>
+                      <div>
+                        <h6 class="mb-0">
+                          {{ user.firstName is defined ? user.firstName : '' }}
+                          {{ user.lastName is defined ? user.lastName : '' }}
+                          {{ (user.firstName is not defined and user.lastName is not defined) ? 'User #' ~ user.id : '' }}
+                        </h6>
+                        <small class="text-muted">
+                          {{ user.country is defined ? user.country : 'Tunisia' }}
+                        </small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ user.email }}</td>
+                  <td>
+                    {% for role in user.roles %}
+                      <span class="badge rounded-pill" style="background-color: {% if role == 'ROLE_ADMIN' %}var(--secondary-color){% elseif role == 'ROLE_USER' %}var(--primary-color){% else %}#6c757d{% endif %};">
+                        {{ role|replace({'ROLE_': ''}) }}
+                      </span>
                     {% endfor %}
-                </tbody>
-            </table>
+                  </td>
+                  <td>
+                    <span class="badge {% if user.isActive is not defined or user.isActive %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
+                      {{ user.isActive is not defined or user.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span>{{ user.createdAt is defined ? user.createdAt|date('M d, Y') : 'N/A' }}</span>
+                  </td>
+                  <td class="text-end pe-3">
+                    <div class="dropdown">
+                      <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton{{ user.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: var(--light-color);">
+                        Actions
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton{{ user.id }}">
+                        <li>
+                          <a href="{{ path('admin_user_details', {'id': user.id}) }}" class="dropdown-item">
+                            <i class="fas fa-eye me-2 text-info"></i> View Details
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope me-2 text-primary"></i> Send Email
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#" class="dropdown-item">
+                            <i class="fas fa-edit me-2" style="color: var(--primary-color);"></i> Edit User
+                          </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                          <a href="#" class="dropdown-item text-danger toggle-user-status" data-id="{{ user.id }}" data-status="{{ user.isActive is not defined or user.isActive ? 'active' : 'inactive' }}">
+                            <i class="fas {{ user.isActive is not defined or user.isActive ? 'fa-user-slash' : 'fa-user-check' }} me-2"></i>
+                            {{ user.isActive is not defined or user.isActive ? 'Deactivate User' : 'Activate User' }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td colspan="7" class="text-center py-5">
+                    <div class="empty-state">
+                      <i class="fas fa-users-slash mb-3" style="font-size: 3rem; color: var(--primary-color);"></i>
+                      <h5>No users found</h5>
+                      <p class="text-muted">No user accounts in the system</p>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
+      </div>
+      <div class="card-footer bg-white d-flex justify-content-between align-items-center p-3">
+        <div>
+          <span class="text-muted">Showing {{ users|length }} users</span>
+        </div>
+        <div>
+          <nav aria-label="Users pagination">
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle status toggle buttons
+    const toggleButtons = document.querySelectorAll('.toggle-user-status');
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const userId = this.getAttribute('data-id');
+        const currentStatus = this.getAttribute('data-status');
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        
+        // Here you would normally send an AJAX request to update the status in the database
+        // For demo purposes, just update the UI
+        
+        this.setAttribute('data-status', newStatus);
+        
+        if (newStatus === 'active') {
+          this.innerHTML = '<i class="fas fa-user-slash me-2"></i> Deactivate User';
+          
+          const statusBadge = document.querySelector(`tr:has(button[id="dropdownMenuButton${userId}"]) .badge`);
+          statusBadge.classList.remove('bg-danger');
+          statusBadge.classList.add('bg-success');
+          statusBadge.textContent = 'Active';
+        } else {
+          this.innerHTML = '<i class="fas fa-user-check me-2"></i> Activate User';
+          
+          const statusBadge = document.querySelector(`tr:has(button[id="dropdownMenuButton${userId}"]) .badge`);
+          statusBadge.classList.remove('bg-success');
+          statusBadge.classList.add('bg-danger');
+          statusBadge.textContent = 'Inactive';
+        }
+        
+        // Show success toast
+        const toastContainer = document.createElement('div');
+        toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+        toastContainer.style.zIndex = '9999';
+        
+        toastContainer.innerHTML = `
+          <div class="toast align-items-center text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body">
+                <i class="fas fa-check-circle me-2"></i>
+                User status updated successfully!
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(toastContainer);
+        const toastElement = toastContainer.querySelector('.toast');
+        const toast = new bootstrap.Toast(toastElement, {delay: 3000});
+        toast.show();
+        
+        setTimeout(() => {
+          toastContainer.remove();
+        }, 3500);
+      });
+    });
+    
+    // Handle user search
+    const userSearch = document.getElementById('userSearch');
+    const tableRows = document.querySelectorAll('tbody tr');
+    
+    userSearch.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      tableRows.forEach(row => {
+        const userName = row.querySelector('h6') ? row.querySelector('h6').textContent.toLowerCase() : '';
+        const userEmail = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        const userId = row.querySelector('td:first-child').textContent.toLowerCase();
+        
+        if (userName.includes(searchTerm) || userEmail.includes(searchTerm) || userId.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
 </div>
 {% endblock %}

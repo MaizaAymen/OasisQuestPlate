@@ -2,15 +2,310 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}">
+        <style>
+            /* Base Styles */
+            :root {
+                --primary-color: #d4a762;
+                --secondary-color: #4a2c12;
+                --light-color: #f8f5f0;
+                --dark-color: #333;
+                --white: #ffffff;
+            }
+            
+            body {
+                font-family: 'Poppins', sans-serif;
+                background-color: var(--light-color);
+                color: var(--dark-color);
+                overflow-x: hidden;
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+            }
+
+            h1, h2, h3, h4 {
+                font-weight: 700;
+                line-height: 1.2;
+                color: var(--secondary-color);
+            }
+
+            a {
+                text-decoration: none;
+                color: var(--primary-color);
+                transition: all 0.3s ease;
+            }
+
+            /* Header */
+            header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 1000;
+                background-color: rgba(74, 44, 18, 0.9);
+                padding: 1rem 0;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .navbar {
+                background-color: rgba(74, 44, 18, 0.9) !important;
+                padding: 1rem 0;
+            }
+
+            .navbar-brand {
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: var(--white) !important;
+            }
+
+            .navbar-brand span {
+                color: var(--primary-color);
+            }
+
+            .navbar-nav .nav-link {
+                color: var(--white) !important;
+                font-weight: 500;
+                position: relative;
+                margin: 0 1rem;
+            }
+
+            .navbar-nav .nav-link:after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                background: var(--primary-color);
+                bottom: -5px;
+                left: 0;
+                transition: width 0.3s ease;
+            }
+
+            .navbar-nav .nav-link:hover:after {
+                width: 100%;
+            }
+
+            .cart-icon {
+                position: relative;
+            }
+
+            .cart-count {
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                background: var(--primary-color);
+                color: var(--white);
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.7rem;
+                font-weight: bold;
+            }
+
+            /* Main Container */
+            .main-container {
+                padding-top: 6rem;
+                min-height: calc(100vh - 6rem);
+            }
+
+            /* Cards */
+            .card {
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                border-radius: 10px;
+                overflow: hidden;
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                margin-bottom: 1.5rem;
+            }
+
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .card-img-top {
+                height: 250px;
+                object-fit: cover;
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                color: var(--white);
+                border: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-primary:hover {
+                background-color: var(--secondary-color);
+            }
+
+            /* Section Headers */
+            .section-title {
+                text-align: center;
+                margin-bottom: 3rem;
+                position: relative;
+            }
+
+            .section-title:after {
+                content: '';
+                position: absolute;
+                width: 80px;
+                height: 4px;
+                background: var(--primary-color);
+                bottom: -15px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Footer */
+            footer {
+                background-color: var(--dark-color);
+                color: var(--white);
+                padding: 3rem 0 1rem;
+                margin-top: 3rem;
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 2rem;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            .footer-column h3 {
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+                position: relative;
+            }
+
+            .footer-column h3:after {
+                content: '';
+                position: absolute;
+                width: 40px;
+                height: 2px;
+                background: var(--primary-color);
+                bottom: -8px;
+                left: 0;
+            }
+
+            .footer-links {
+                list-style: none;
+                padding: 0;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.8rem;
+            }
+
+            .footer-links a {
+                color: #ccc;
+                transition: color 0.3s ease, padding-left 0.3s ease;
+            }
+
+            .footer-links a:hover {
+                color: var(--primary-color);
+                padding-left: 5px;
+            }
+
+            .social-links {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+
+            .social-links a {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                color: var(--white);
+                transition: all 0.3s ease;
+            }
+
+            .social-links a:hover {
+                background: var(--primary-color);
+                transform: translateY(-3px);
+            }
+
+            .copyright {
+                text-align: center;
+                padding-top: 2rem;
+                margin-top: 2rem;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                color: #aaa;
+                font-size: 0.9rem;
+            }
+
+            /* Forms */
+            .form-control {
+                border-radius: 5px;
+                padding: 0.8rem;
+                border: 1px solid #ddd;
+            }
+
+            .form-control:focus {
+                box-shadow: 0 0 0 0.25rem rgba(212, 167, 98, 0.25);
+                border-color: var(--primary-color);
+            }
+
+            /* Admin menu tweaks */
+            .main-menu {
+                background-color: var(--secondary-color);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-icon {
+                color: var(--primary-color);
+            }
+            
+            .nav-text {
+                color: var(--white);
+            }
+
+            /* User circle */
+            .user-circle {
+                width: 30px;
+                height: 30px;
+                background-color: var(--primary-color);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                header {
+                    position: relative;
+                }
+                
+                .main-container {
+                    padding-top: 1rem;
+                }
+            }
+        </style>
         {% endblock %}
 
         {% block javascripts %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
@@ -51,43 +346,116 @@
             </nav>
         {% endif %}
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container">
-            <a class="navbar-brand" href="{{ path('app_shop') }}">Nefta Dates</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav">
-                {% if app.user %}
-                  <li class="nav-item"><a class="nav-link" href="{{ path('app_shop') }}">Shop</a></li>
-                  <li class="nav-item"><a class="nav-link" href="{{ path('app_ai_assist_form') }}">Assistant</a></li>
-                {% endif %}
-                <li class="nav-item"><a class="nav-link" href="{{ path('app_about') }}">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ path('app_contact') }}">Contact</a></li>
-                {% if is_granted('ROLE_ADMIN') %}
-                  <li class="nav-item"><a class="nav-link" href="{{ path('admin_product_index') }}">Admin</a></li>
-                {% endif %}
-              </ul>
-              <ul class="navbar-nav ms-auto">
-                {% if app.user %}
-                    <li class="nav-item d-flex align-items-center me-3">
-                        <div class="user-circle me-2">{{ app.user.email|slice(0, 1)|upper }}</div>
-                        <span class="nav-link-text">{{ (app.user.email|split('@')|first)|capitalize }}</span>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_cart') }}">Cart</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Register</a></li>
-                {% endif %}
-              </ul>
-            </div>
-          </div>
-        </nav>
+        <!-- Header -->
+        <header>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="{{ path('app_shop') }}">Nefta<span>Dates</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                            style="background-color: var(--primary-color);">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_home') }}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_about') }}">About</a></li>
+                            {% if app.user %}
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_shop') }}">Products</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_ai_assist_form') }}">Assistant</a></li>
+                            {% endif %}
+                            <li class="nav-item"><a class="nav-link" href="{{ path('app_contact') }}">Contact</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item"><a class="nav-link" href="{{ path('admin_product_index') }}">Admin</a></li>
+                            {% endif %}
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            {% if app.user %}
+                                <li class="nav-item d-flex align-items-center me-3">
+                                    <div class="user-circle me-2">{{ app.user.email|slice(0, 1)|upper }}</div>
+                                    <span class="nav-link">{{ (app.user.email|split('@')|first)|capitalize }}</span>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link cart-icon" href="{{ path('app_cart') }}">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span class="cart-count">{{ app.session.get('cart')|length|default(0) }}</span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Login</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Register</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
-        <div class="container mt-4">
-            {% block body %}{% endblock %}
+        <div class="main-container">
+            <div class="container mt-4">
+                {% block body %}{% endblock %}
+            </div>
         </div>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ path('app_home') }}">Home</a></li>
+                        <li><a href="{{ path('app_about') }}">About Us</a></li>
+                        <li><a href="{{ path('app_shop') }}">Shop</a></li>
+                        <li><a href="{{ path('app_contact') }}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Customer Care</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Nefta, Tunisia</li>
+                        <li><i class="fas fa-phone"></i> +216 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> info@neftadates.com</li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; {{ "now"|date("Y") }} Nefta Dates. All rights reserved.</p>
+            </div>
+        </footer>
+        
+        <!-- Custom JS -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Smooth scrolling for anchor links
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        if (this.getAttribute('href') !== "#") {
+                            e.preventDefault();
+                            const target = document.querySelector(this.getAttribute('href'));
+                            if (target) {
+                                target.scrollIntoView({
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

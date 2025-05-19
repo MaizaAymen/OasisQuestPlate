@@ -3,7 +3,51 @@
 {% block title %}Order Confirmation - Nefta Dates{% endblock %}
 
 {% block body %}
-<h1>Order Confirmed</h1>
-<p>Thank you for your purchase! Your order has been placed successfully.</p>
-<a href="{{ path('app_shop') }}" class="btn btn-primary">Continue Shopping</a>
+<section class="confirmation-section py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="confirmation-container bg-white p-5 rounded shadow text-center">
+          <div class="confirmation-icon mb-4">
+            <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--primary-color);"></i>
+          </div>
+          
+          <h2 class="section-title mb-3">Order Confirmed!</h2>
+          <p class="lead mb-4">Thank you for your purchase! Your order has been placed successfully.</p>
+          
+          <div class="order-details p-4 mb-4 rounded" style="background-color: var(--light-color);">
+            <h5 class="mb-3 border-bottom pb-2">Order Details</h5>
+            
+            <div class="row text-start">
+              <div class="col-md-6">
+                <p><strong>Order Number:</strong> <span class="text-muted">#{{ "ORD" ~ random(10000, 99999) }}</span></p>
+                <p><strong>Order Date:</strong> <span class="text-muted">{{ "now"|date("F d, Y") }}</span></p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Payment Method:</strong> <span class="text-muted">Cash on Delivery</span></p>
+                <p><strong>Shipping Method:</strong> <span class="text-muted">Standard Delivery</span></p>
+              </div>
+            </div>
+            
+            <div class="mt-3 pt-3 border-top">
+              <p class="mb-1"><strong>Estimated Delivery:</strong></p>
+              <p class="text-muted">{{ "now"|date_modify("+3 day")|date("F d, Y") }} - {{ "now"|date_modify("+5 day")|date("F d, Y") }}</p>
+            </div>
+          </div>
+          
+          <p class="mb-4">We've sent a confirmation email with all the details to your registered email address.</p>
+          
+          <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+            <a href="{{ path('app_shop') }}" class="btn btn-lg px-4" style="background-color: var(--primary-color); color: white;">
+              <i class="fas fa-shopping-bag me-2"></i> Continue Shopping
+            </a>
+            <a href="#" class="btn btn-outline-secondary btn-lg px-4">
+              <i class="fas fa-box me-2"></i> Track Order
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

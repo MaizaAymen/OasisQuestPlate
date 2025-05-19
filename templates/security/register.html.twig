@@ -3,10 +3,117 @@
 {% block title %}Register - Nefta Dates{% endblock %}
 
 {% block body %}
-<h1>Register</h1>
-{{ form_start(registrationForm) }}
-{{ form_row(registrationForm.email) }}
-{{ form_row(registrationForm.plainPassword) }}
-<button class="btn btn-primary">Register</button>
-{{ form_end(registrationForm) }}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h2 class="auth-title">Create Account</h2>
+                        <p class="auth-subtitle">Join the Nefta Dates community</p>
+                    </div>
+                    
+                    {{ form_start(registrationForm, {'attr': {'class': 'registration-form'}}) }}
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email address'}}) }}
+                            <label for="{{ registrationForm.email.vars.id }}">Email address</label>
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-4">
+                            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+                            <label for="{{ registrationForm.plainPassword.vars.id }}">Password</label>
+                            <div class="form-text mt-1">
+                                <small>Password must be at least 8 characters long with at least one letter and one number.</small>
+                            </div>
+                            <div class="form-error">
+                                {{ form_errors(registrationForm.plainPassword) }}
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100 mb-3">Create Account</button>
+                        
+                        <div class="text-center mt-4">
+                            <p>Already have an account? <a href="{{ path('app_login') }}">Sign in</a></p>
+                        </div>
+                    {{ form_end(registrationForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .auth-section {
+        padding: 5rem 0;
+        background-color: var(--light-color);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .auth-card {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 3rem;
+        border: none;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-title {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-subtitle {
+        color: #777;
+    }
+    
+    .form-control {
+        padding: 0.8rem 1.2rem;
+    }
+    
+    .form-floating label {
+        padding: 1rem 1.2rem;
+    }
+    
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        transform: scale(.85) translateY(-0.75rem) translateX(0.15rem);
+    }
+    
+    .form-floating > .form-control:focus,
+    .form-floating > .form-control:not(:placeholder-shown) {
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+    }
+    
+    .btn-primary {
+        padding: 12px;
+        font-weight: 600;
+    }
+    
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    
+    a:hover {
+        color: var(--secondary-color);
+    }
+    
+    .form-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
 {% endblock %}

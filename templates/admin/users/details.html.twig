@@ -3,96 +3,346 @@
 {% block title %}User Details - Admin{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>User Details</h1>
-    
-    <div class="mb-4">
-        <a href="{{ path('admin_users_index') }}" class="btn btn-secondary">Back to Users List</a>
+<section class="admin-section py-5">
+  <div class="container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ path('admin_users_index') }}" style="color: var(--primary-color);">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User #{{ userData.user.id }}</li>
+          </ol>
+        </nav>
+        <h2 class="section-title mb-0">User Profile</h2>
+      </div>
+      <div>
+        <a href="{{ path('admin_users_index') }}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-2"></i> Back to Users
+        </a>
+      </div>
     </div>
     
     <div class="row">
-        <!-- User Information Card -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">User Information</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>ID:</strong> {{ userData.user.id }}</p>
-                    <p><strong>Email:</strong> {{ userData.user.email }}</p>
-                    <p><strong>Roles:</strong>
-                        {% set roles = userData.user.roles|default([]) %}
-                        {% if roles is not iterable %}
-                            {% set roles = roles|json_encode|replace({'"': ''})|replace({'{': ''})|replace({'}': ''})|replace({'[': ''})|replace({']': ''})|split(',') %}
-                        {% endif %}
-                        {% for role in roles %}
-                            <span class="badge bg-{% if role == 'ROLE_ADMIN' %}danger{% elseif role == 'ROLE_USER' %}success{% else %}secondary{% endif %}">
-                                {{ role }}
-                            </span>
-                        {% endfor %}
-                    </p>
-                </div>
+      <!-- User Profile Card -->
+      <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body p-0">
+            <!-- User Header -->
+            <div class="text-center p-4" style="background-color: var(--light-color); border-radius: 0.375rem 0.375rem 0 0;">
+              <div class="avatar-circle mx-auto mb-3" style="width: 100px; height: 100px; border-radius: 50%; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 500;">
+                {{ userData.user.email|slice(0, 1)|upper }}
+              </div>
+              <h4 class="mb-1">
+                {{ userData.user.firstName is defined ? userData.user.firstName : '' }}
+                {{ userData.user.lastName is defined ? userData.user.lastName : '' }}
+                {{ (userData.user.firstName is not defined and userData.user.lastName is not defined) ? 'User Account' : '' }}
+              </h4>
+              <p class="text-muted mb-3">{{ userData.user.email }}</p>
+              
+              {% set roles = userData.user.roles|default([]) %}
+              {% if roles is not iterable %}
+                {% set roles = roles|json_encode|replace({'"': ''})|replace({'{': ''})|replace({'}': ''})|replace({'[': ''})|replace({']': ''})|split(',') %}
+              {% endif %}
+              {% for role in roles %}
+                <span class="badge rounded-pill" style="background-color: {% if role == 'ROLE_ADMIN' %}var(--secondary-color){% elseif role == 'ROLE_USER' %}var(--primary-color){% else %}#6c757d{% endif %};">
+                  {{ role|replace({'ROLE_': ''}) }}
+                </span>
+              {% endfor %}
             </div>
+            
+            <!-- User Details -->
+            <div class="p-4">
+              <h5 class="border-bottom pb-2 mb-3">Account Information</h5>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">ID:</span>
+                  <span class="fw-medium">{{ userData.user.id }}</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Status:</span>
+                  <span class="badge {% if userData.user.isActive is not defined or userData.user.isActive %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
+                    {{ userData.user.isActive is not defined or userData.user.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Joined:</span>
+                  <span class="fw-medium">{{ userData.user.createdAt is defined ? userData.user.createdAt|date('M d, Y') : 'N/A' }}</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Last Login:</span>
+                  <span class="fw-medium">{{ userData.user.lastLogin is defined ? userData.user.lastLogin|date('M d, Y H:i') : 'N/A' }}</span>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                  <span class="text-muted">Orders:</span>
+                  <span class="fw-medium">{{ userData.orders|length }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="p-4 pt-2">
+              <h5 class="border-bottom pb-2 mb-3">Actions</h5>
+              <div class="d-grid gap-2">
+                <button class="btn" style="background-color: var(--primary-color); color: white;">
+                  <i class="fas fa-envelope me-2"></i> Send Message
+                </button>
+                <button class="btn" style="background-color: var(--secondary-color); color: white;">
+                  <i class="fas fa-user-edit me-2"></i> Edit Profile
+                </button>
+                <button class="btn btn-outline-danger">
+                  <i class="fas fa-{% if userData.user.isActive is not defined or userData.user.isActive %}user-slash{% else %}user-check{% endif %} me-2"></i>
+                  {{ userData.user.isActive is not defined or userData.user.isActive ? 'Deactivate Account' : 'Activate Account' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Order History and Activity -->
+      <div class="col-lg-8">
+        <!-- Order History -->
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i> Order History</h5>
+              {% if userData.orders|length > 0 %}
+              <span class="badge" style="background-color: var(--primary-color);">{{ userData.orders|length }} Orders</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-body p-0">
+            {% if userData.orders|length > 0 %}
+              <div class="list-group list-group-flush" id="ordersAccordion">
+                {% for order in userData.orders %}
+                  <div class="list-group-item list-group-item-action p-0">
+                    <div class="d-flex w-100 justify-content-between align-items-center p-3" 
+                         data-bs-toggle="collapse" 
+                         href="#orderCollapse{{ order.id }}" 
+                         role="button" 
+                         aria-expanded="false" 
+                         aria-controls="orderCollapse{{ order.id }}"
+                         style="cursor: pointer;">
+                      <div>
+                        <h6 class="mb-1">Order #{{ order.id }}</h6>
+                        <p class="mb-0 text-muted small">{{ order.created_at|date('F d, Y H:i') }}</p>
+                      </div>
+                      <div class="text-end">
+                        <span class="badge rounded-pill mb-1" style="background-color: 
+                          {% if order.status == 'completed' %}#28a745
+                          {% elseif order.status == 'processing' %}var(--primary-color)
+                          {% elseif order.status == 'canceled' %}#dc3545
+                          {% else %}#6c757d{% endif %};">
+                          {{ order.status|capitalize }}
+                        </span>
+                        <p class="mb-0 fw-bold">{{ order.total }} TND</p>
+                      </div>
+                    </div>
+                    
+                    <div class="collapse border-top" id="orderCollapse{{ order.id }}">
+                      <div class="p-3">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">Shipping Address</h6>
+                            <p class="mb-0">{{ order.address }},<br>{{ order.city }}, {{ order.postal_code }}</p>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">Payment Details</h6>
+                            <p class="mb-0">Payment Method: Cash on Delivery</p>
+                          </div>
+                        </div>
+                        
+                        <h6 class="text-muted mt-2 mb-3">Order Items</h6>
+                        <div class="table-responsive">
+                          <table class="table table-sm">
+                            <thead style="background-color: var(--light-color);">
+                              <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th class="text-end">Total</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for item in order.orderItems %}
+                                <tr>
+                                  <td>
+                                    <div class="d-flex align-items-center">
+                                      {% if item.product.image is defined %}
+                                      <div class="product-img me-2" style="width: 40px; height: 40px; overflow: hidden; border-radius: 6px;">
+                                        <img src="/{{ item.product.image }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                                      </div>
+                                      {% endif %}
+                                      <div>{{ item.product.name }}</div>
+                                    </div>
+                                  </td>
+                                  <td>{{ item.quantity }}</td>
+                                  <td>{{ item.product.price }} TND</td>
+                                  <td class="text-end">{{ item.quantity * item.product.price }} TND</td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <td colspan="3" class="text-end fw-bold">Subtotal:</td>
+                                <td class="text-end">{{ order.total - 7 }} TND</td>
+                              </tr>
+                              <tr>
+                                <td colspan="3" class="text-end fw-bold">Shipping:</td>
+                                <td class="text-end">7 TND</td>
+                              </tr>
+                              <tr>
+                                <td colspan="3" class="text-end fw-bold">Total:</td>
+                                <td class="text-end fw-bold">{{ order.total }} TND</td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div>
+                        
+                        <div class="text-end mt-3">
+                          <a href="#" class="btn btn-sm btn-outline-secondary me-2">
+                            <i class="fas fa-print me-1"></i> Print
+                          </a>
+                          <a href="#" class="btn btn-sm" style="background-color: var(--primary-color); color: white;">
+                            <i class="fas fa-file-invoice me-1"></i> Generate Invoice
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-5">
+                <i class="fas fa-shopping-bag mb-3" style="font-size: 3rem; color: var(--light-color);"></i>
+                <h5>No Orders Yet</h5>
+                <p class="text-muted mb-0">This user hasn't placed any orders yet.</p>
+              </div>
+            {% endif %}
+          </div>
         </div>
         
-        <!-- Orders Card -->
-        <div class="col-md-8 mb-4">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Order History</h5>
+        <!-- Activity Log -->
+        <div class="card shadow-sm border-0">
+          <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+            <h5 class="mb-0"><i class="fas fa-history me-2"></i> Recent Activity</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="timeline p-3">
+              {% set hasActivity = false %}
+              
+              <!-- Simulated activity logs -->
+              {% if userData.orders|length > 0 %}
+                {% set hasActivity = true %}
+                {% for order in userData.orders|slice(0, 3) %}
+                  <div class="timeline-item">
+                    <div class="timeline-marker" style="background-color: var(--primary-color);"></div>
+                    <div class="timeline-content">
+                      <h6 class="mb-0">Placed Order #{{ order.id }}</h6>
+                      <p class="small text-muted mb-0">{{ order.created_at|date('F d, Y H:i') }}</p>
+                      <p class="mb-0">Total amount: {{ order.total }} TND</p>
+                    </div>
+                  </div>
+                {% endfor %}
+                
+                <div class="timeline-item">
+                  <div class="timeline-marker" style="background-color: var(--secondary-color);"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-0">Account Created</h6>
+                    <p class="small text-muted mb-0">{{ userData.user.createdAt is defined ? userData.user.createdAt|date('F d, Y') : 'N/A' }}</p>
+                    <p class="mb-0">User registered with email {{ userData.user.email }}</p>
+                  </div>
                 </div>
-                <div class="card-body">
-                    {% if userData.orders|length > 0 %}
-                        <div class="accordion" id="ordersAccordion">
-                            {% for order in userData.orders %}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order{{ order.id }}">
-                                            Order #{{ order.id }} - {{ order.created_at|date('Y-m-d H:i') }}
-                                        </button>
-                                    </h2>
-                                    <div id="order{{ order.id }}" class="accordion-collapse collapse" data-bs-parent="#ordersAccordion">
-                                        <div class="accordion-body">
-                                            <p><strong>Shipping Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.postal_code }}</p>
-                                            <h6>Items:</h6>
-                                            <pre class="bg-light p-2">{{ order.items|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted">No orders found for this user.</p>
-                    {% endif %}
+              {% else %}
+                <div class="timeline-item">
+                  <div class="timeline-marker" style="background-color: var(--secondary-color);"></div>
+                  <div class="timeline-content">
+                    <h6 class="mb-0">Account Created</h6>
+                    <p class="small text-muted mb-0">{{ userData.user.createdAt is defined ? userData.user.createdAt|date('F d, Y') : 'N/A' }}</p>
+                    <p class="mb-0">User registered with email {{ userData.user.email }}</p>
+                  </div>
                 </div>
+                {% set hasActivity = true %}
+              {% endif %}
+              
+              {% if not hasActivity %}
+                <div class="text-center py-5">
+                  <i class="fas fa-history mb-3" style="font-size: 3rem; color: var(--light-color);"></i>
+                  <h5>No Activity</h5>
+                  <p class="text-muted mb-0">No activity has been recorded for this user.</p>
+                </div>
+              {% endif %}
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
-    <!-- Chat History Card -->
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">
-            <h5 class="mb-0">Chat History with AI Assistant</h5>
-        </div>
-        <div class="card-body">
-            {% if userData.chatMessages|length > 0 %}
-                <div class="chat-window border rounded p-3" style="max-height: 500px; overflow-y: auto;">
-                    {% for message in userData.chatMessages %}
-                        <div class="mb-3 pb-2 {% if not loop.last %}border-bottom{% endif %}">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="badge {% if message.role == 'user' %}bg-primary{% else %}bg-secondary{% endif %} me-2">
-                                    {{ message.role|capitalize }}
-                                </span>
-                                <small class="text-muted">{{ message.created_at|date('Y-m-d H:i:s') }}</small>
-                            </div>
-                            <div class="ps-4">{{ message.content }}</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-muted">No chat messages found for this user.</p>
-            {% endif %}
-        </div>
-    </div>
-</div>
+  </div>
+</section>
+
+<style>
+/* Timeline styles */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.timeline-marker:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  height: calc(100% + 1.5rem);
+  width: 2px;
+  background-color: #e9ecef;
+  transform: translateX(-50%);
+  top: 15px;
+}
+
+.timeline-item:last-child .timeline-marker:before {
+  display: none;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Enable all bootstrap tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
 {% endblock %}

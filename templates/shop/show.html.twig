@@ -3,15 +3,464 @@
 {% block title %}{{ product.name }} - Nefta Dates{% endblock %}
 
 {% block body %}
-<div class="row">
-    <div class="col-md-6">
-        <img src="/{{ product.image }}" class="img-fluid" alt="{{ product.name }}">
+<section class="product-detail-section">
+    <div class="container">
+        <div class="breadcrumb-container mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('app_shop') }}">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <div class="card product-detail-card">
+            <div class="row g-0">
+                <div class="col-md-6 product-image-col">
+                    <div class="product-image-container">
+                        <img src="/{{ product.image }}" class="img-fluid rounded" alt="{{ product.name }}">
+                    </div>
+                </div>
+                <div class="col-md-6 product-info-col">
+                    <div class="product-info-content">
+                        <h2 class="product-title">{{ product.name }}</h2>
+                        
+                        <div class="product-rating mt-2 mb-3">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="rating-count">(24 reviews)</span>
+                        </div>
+                        
+                        <div class="product-price mb-4">
+                            <span>{{ product.price }} TND</span>
+                        </div>
+                        
+                        <div class="product-description mb-4">
+                            <h5>Description</h5>
+                            <p>{{ product.description }}</p>
+                        </div>
+                        
+                        <div class="product-quantity mb-4">
+                            <h5>Quantity</h5>
+                            <div class="quantity-selector">
+                                <button type="button" class="qty-btn minus">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="qty-input" value="1" min="1" max="99">
+                                <button type="button" class="qty-btn plus">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary add-to-cart-btn">
+                                <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                            </a>
+                            <button class="btn btn-outline-primary wishlist-btn">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="product-meta mt-4">
+                            <div class="meta-item">
+                                <span class="meta-label">Category:</span>
+                                <span class="meta-value">Premium Dates</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Origin:</span>
+                                <span class="meta-value">Nefta, Tunisia</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Tags:</span>
+                                <span class="meta-value">Organic, Natural, Healthy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-tabs mt-5">
+            <ul class="nav nav-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional" type="button" role="tab" aria-controls="additional" aria-selected="false">Additional Information</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (24)</button>
+                </li>
+            </ul>
+            <div class="tab-content p-4 bg-white rounded-bottom shadow-sm" id="productTabsContent">
+                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                    <h4>About this Product</h4>
+                    <p>{{ product.description }}</p>
+                    <p>Our dates are carefully harvested at peak ripeness and packaged with care to ensure they retain all their natural goodness. Enjoy them on their own as a nutritious snack, or incorporate them into your favorite recipes for a natural sweetener.</p>
+                </div>
+                <div class="tab-pane fade" id="additional" role="tabpanel" aria-labelledby="additional-tab">
+                    <h4>Product Specifications</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Origin</th>
+                                <td>Nefta, Tunisia</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Ingredients</th>
+                                <td>100% Natural Dates</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Storage</th>
+                                <td>Store in a cool, dry place</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Shelf Life</th>
+                                <td>12 months</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <h4>Customer Reviews</h4>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah J." class="reviewer-img">
+                                <div>
+                                    <h5>Sarah J.</h5>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-date">May 15, 2025</div>
+                        </div>
+                        <div class="review-content">
+                            <p>These dates are absolutely delicious! The texture is perfect - not too soft, not too firm - and the flavor is incredibly rich and complex. I'm a customer for life!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="related-products mt-5">
+            <h3 class="section-title">You May Also Like</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Related Product">
+                        <div class="product-info">
+                            <h3 class="product-title">Deglet Nour</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p class="product-price">12.99 TND</p>
+                            <button class="add-to-cart">View Product</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="https://images.unsplash.com/photo-1603569283847-aa295f0d016a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Related Product">
+                        <div class="product-info">
+                            <h3 class="product-title">Medjool</h3>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p class="product-price">15.99 TND</p>
+                            <button class="add-to-cart">View Product</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h2>{{ product.name }}</h2>
-        <p class="fw-bold">{{ product.price }} TND</p>
-        <p>{{ product.description }}</p>
-        <a href="{{ path('app_cart_add', {'id': product.id}) }}" class="btn btn-primary">Add to Cart</a>
-    </div>
-</div>
+</section>
+
+<style>
+    .product-detail-section {
+        padding: 5rem 0;
+    }
+    
+    .breadcrumb {
+        background-color: transparent;
+    }
+    
+    .breadcrumb-item a {
+        color: var(--primary-color);
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--secondary-color);
+    }
+    
+    .product-detail-card {
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .product-image-col {
+        padding: 0;
+        background-color: var(--light-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .product-image-container {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .product-image-container img {
+        max-height: 500px;
+        object-fit: contain;
+    }
+    
+    .product-info-col {
+        padding: 0;
+    }
+    
+    .product-info-content {
+        padding: 3rem;
+    }
+    
+    .product-title {
+        color: var(--secondary-color);
+        font-weight: 700;
+    }
+    
+    .product-rating {
+        color: #f8c822;
+    }
+    
+    .rating-count {
+        color: #777;
+        margin-left: 5px;
+    }
+    
+    .product-price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    .product-description h5 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        max-width: 150px;
+    }
+    
+    .qty-input {
+        width: 50px;
+        text-align: center;
+        border: none;
+        background: transparent;
+        font-weight: 600;
+    }
+    
+    .qty-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: var(--light-color);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary-color);
+        cursor: pointer;
+    }
+    
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .add-to-cart-btn {
+        flex: 1;
+    }
+    
+    .wishlist-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .product-meta {
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding-top: 1.5rem;
+    }
+    
+    .meta-item {
+        margin-bottom: 0.5rem;
+    }
+    
+    .meta-label {
+        color: #777;
+        margin-right: 5px;
+    }
+    
+    .meta-value {
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+    
+    .product-tabs .nav-tabs {
+        border-bottom: none;
+    }
+    
+    .product-tabs .nav-link {
+        color: var(--dark-color);
+        border: none;
+        border-radius: 0;
+        padding: 1rem 2rem;
+        font-weight: 600;
+    }
+    
+    .product-tabs .nav-link.active {
+        color: var(--secondary-color);
+        border-bottom: 3px solid var(--primary-color);
+        background-color: var(--light-color);
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .review-item {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    
+    .reviewer {
+        display: flex;
+        align-items: center;
+    }
+    
+    .reviewer-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+    
+    .review-rating {
+        color: #f8c822;
+    }
+    
+    .review-date {
+        color: #777;
+    }
+    
+    .related-products {
+        margin-top: 4rem;
+    }
+    
+    @media (max-width: 767px) {
+        .product-info-content {
+            padding: 1.5rem;
+        }
+        
+        .product-image-container {
+            padding: 1rem;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .wishlist-btn {
+            width: 100%;
+            border-radius: 5px;
+            height: auto;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Quantity selector
+        const minusBtn = document.querySelector('.qty-btn.minus');
+        const plusBtn = document.querySelector('.qty-btn.plus');
+        const qtyInput = document.querySelector('.qty-input');
+        
+        minusBtn.addEventListener('click', function() {
+            let val = parseInt(qtyInput.value);
+            if (val > 1) {
+                qtyInput.value = val - 1;
+            }
+        });
+        
+        plusBtn.addEventListener('click', function() {
+            let val = parseInt(qtyInput.value);
+            qtyInput.value = val + 1;
+        });
+        
+        // Add to cart button effect
+        const addToCartBtn = document.querySelector('.add-to-cart-btn');
+        addToCartBtn.addEventListener('click', function(e) {
+            // Get the current quantity
+            const quantity = parseInt(qtyInput.value);
+            const originalText = this.innerHTML;
+            
+            this.innerHTML = `<i class="fas fa-check me-2"></i> Added to Cart`;
+            this.style.backgroundColor = 'var(--secondary-color)';
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.style.backgroundColor = 'var(--primary-color)';
+            }, 2000);
+        });
+        
+        // Wishlist button
+        const wishlistBtn = document.querySelector('.wishlist-btn');
+        wishlistBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                this.innerHTML = '<i class="fas fa-heart text-danger"></i>';
+            } else {
+                this.innerHTML = '<i class="fas fa-heart"></i>';
+            }
+        });
+    });
+</script>
 {% endblock %}

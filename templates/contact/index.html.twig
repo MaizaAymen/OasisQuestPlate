@@ -3,21 +3,209 @@
 {% block title %}Contact Us - Nefta Dates{% endblock %}
 
 {% block body %}
-<h1>Contact Us</h1>
-<p>If you have any questions, please email us at <a href="mailto:info@neftadates.com">info@neftadates.com</a> or use the form below.</p>
-<form>
-  <div class="mb-3">
-    <label for="contactName" class="form-label">Name</label>
-    <input type="text" class="form-control" id="contactName" required>
-  </div>
-  <div class="mb-3">
-    <label for="contactEmail" class="form-label">Email</label>
-    <input type="email" class="form-control" id="contactEmail" required>
-  </div>
-  <div class="mb-3">
-    <label for="contactMessage" class="form-label">Message</label>
-    <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Send</button>
-</form>
+<section class="contact-section">
+    <div class="container">
+        <h2 class="section-title">Contact Us</h2>
+        
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card contact-info-card">
+                    <div class="card-body">
+                        <h3>Get in Touch</h3>
+                        <p class="text-muted mb-4">We'd love to hear from you! Whether you have a question about our products, ordering, or anything else, our team is ready to answer all your questions.</p>
+                        
+                        <div class="contact-item">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h5>Our Location</h5>
+                                <p>Nefta Oasis, Tozeur Governorate, Tunisia</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h5>Phone Number</h5>
+                                <p>+216 123 456 789</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h5>Email Address</h5>
+                                <p><a href="mailto:info@neftadates.com">info@neftadates.com</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h5>Working Hours</h5>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card contact-form-card">
+                    <div class="card-body">
+                        <h3>Send Us a Message</h3>
+                        <form id="contactForm">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="contactName" placeholder="Enter your name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="contactEmail" placeholder="Enter your email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactSubject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="contactSubject" placeholder="What is this about?">
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactMessage" class="form-label">Message</label>
+                                <textarea class="form-control" id="contactMessage" rows="5" placeholder="Type your message here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="map-section mt-4">
+    <div class="container">
+        <div class="card">
+            <div class="card-body p-0">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53629.87263638483!2d7.8612214906896846!3d33.87656687325535!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12f896b75cff5d2d%3A0xc81d9d77fdfef428!2sNefta%2C%20Tunisia!5e0!3m2!1sen!2s!4v1652160910911!5m2!1sen!2s" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .contact-section {
+        padding: 5rem 0 3rem;
+    }
+    
+    .contact-info-card,
+    .contact-form-card {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        height: 100%;
+        border: none;
+    }
+    
+    .contact-info-card {
+        background-color: var(--light-color);
+    }
+    
+    .contact-item {
+        display: flex;
+        margin-bottom: 2rem;
+    }
+    
+    .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+    
+    .icon-wrapper i {
+        color: white;
+        font-size: 1.2rem;
+    }
+    
+    .contact-item h5 {
+        margin-bottom: 0.3rem;
+        color: var(--secondary-color);
+    }
+    
+    .contact-item p {
+        margin-bottom: 0;
+    }
+    
+    .map-section {
+        margin-bottom: 3rem;
+    }
+    
+    .map-section .card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: none;
+    }
+    
+    .form-control {
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(212, 167, 98, 0.25);
+    }
+    
+    .btn-primary {
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+    }
+    
+    @media (max-width: 991px) {
+        .contact-info-card {
+            margin-bottom: 2rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Here you would normally send the form data to your server
+                
+                // Show a success message
+                const formElements = contactForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    if (formElements[i].type !== 'submit') {
+                        formElements[i].value = '';
+                    }
+                }
+                
+                // Create success alert
+                const successAlert = document.createElement('div');
+                successAlert.className = 'alert alert-success mt-3';
+                successAlert.innerHTML = '<i class="fas fa-check-circle me-2"></i> Your message has been sent successfully. We\'ll get back to you soon!';
+                
+                contactForm.appendChild(successAlert);
+                
+                // Remove alert after 5 seconds
+                setTimeout(() => {
+                    successAlert.remove();
+                }, 5000);
+            });
+        }
+    });
+</script>
 {% endblock %}

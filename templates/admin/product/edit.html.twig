@@ -1,11 +1,252 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Product{% endblock %}
+{% block title %}Edit Product - Admin{% endblock %}
 
 {% block body %}
-<h1>Edit Product</h1>
-{{ form_start(productForm) }}
-  {{ form_widget(productForm) }}
-  <button class="btn btn-primary mt-3">Update Product</button>
-{{ form_end(productForm) }}
+<section class="admin-section py-5">
+  <div class="container">
+    <div class="admin-header d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ path('admin_product_index') }}" style="color: var(--primary-color);">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
+          </ol>
+        </nav>
+        <h2 class="section-title mb-0">Edit Product</h2>
+        <p class="text-muted">Update product information</p>
+      </div>
+      <div>
+        <a href="{{ path('admin_product_index') }}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-2"></i> Back to Products
+        </a>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+          <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+            <h5 class="mb-0"><i class="fas fa-edit me-2"></i> Product Information</h5>
+          </div>
+          <div class="card-body p-4">
+            {{ form_start(productForm) }}
+              <div class="row mb-3">
+                <div class="col-md-12 mb-3">
+                  {{ form_label(productForm.name, 'Product Name', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  {{ form_widget(productForm.name, {'attr': {'class': 'form-control', 'placeholder': 'Enter product name'}}) }}
+                  {{ form_errors(productForm.name) }}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  {{ form_label(productForm.price, 'Price (TND)', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  <div class="input-group">
+                    {{ form_widget(productForm.price, {'attr': {'class': 'form-control', 'placeholder': '0.00'}}) }}
+                    <span class="input-group-text">TND</span>
+                  </div>
+                  {{ form_errors(productForm.price) }}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  {{ form_label(productForm.category, 'Category', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  {{ form_widget(productForm.category, {'attr': {'class': 'form-select', 'placeholder': 'Select category'}}) }}
+                  {{ form_errors(productForm.category) }}
+                </div>
+                
+                <div class="col-md-12 mb-3">
+                  {{ form_label(productForm.description, 'Description', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  {{ form_widget(productForm.description, {'attr': {'class': 'form-control', 'placeholder': 'Describe your product...', 'rows': 5}}) }}
+                  {{ form_errors(productForm.description) }}
+                </div>
+                
+                <div class="col-md-12 mb-3">
+                  {{ form_label(productForm.image, 'Product Image', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  <div class="input-group mb-3">
+                    {{ form_widget(productForm.image, {'attr': {'class': 'form-control', 'id': 'inputProductImage'}}) }}
+                    <label class="input-group-text" for="inputProductImage" style="background-color: var(--primary-color); color: white;">
+                      <i class="fas fa-upload me-2"></i> Browse
+                    </label>
+                  </div>
+                  <div class="form-text text-muted">
+                    <small>
+                      <i class="fas fa-info-circle me-1"></i>
+                      Recommended image size: 800x800px. Max file size: 2MB.
+                    </small>
+                  </div>
+                  {{ form_errors(productForm.image) }}
+                </div>
+                
+                {% if productForm.stock is defined %}
+                <div class="col-md-6 mb-3">
+                  {{ form_label(productForm.stock, 'Stock Quantity', {'label_attr': {'class': 'form-label fw-medium'}}) }}
+                  {{ form_widget(productForm.stock, {'attr': {'class': 'form-control', 'placeholder': 'Enter quantity'}}) }}
+                  {{ form_errors(productForm.stock) }}
+                </div>
+                {% endif %}
+                
+                {% if productForm.isActive is defined %}
+                <div class="col-md-6 mb-3">
+                  <div class="form-check form-switch mt-4 pt-2">
+                    {{ form_widget(productForm.isActive, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
+                    {{ form_label(productForm.isActive, 'Product is active', {'label_attr': {'class': 'form-check-label fw-medium'}}) }}
+                  </div>
+                  {{ form_errors(productForm.isActive) }}
+                </div>
+                {% endif %}
+                
+                <!-- Add any remaining form fields here -->
+                {% for child in productForm.children %}
+                  {% if child.vars.name != 'name' and child.vars.name != 'price' and child.vars.name != 'category' and child.vars.name != 'description' and child.vars.name != 'image' and child.vars.name != 'stock' and child.vars.name != 'isActive' and child.vars.name != '_token' %}
+                    <div class="col-md-12 mb-3">
+                      {{ form_row(child) }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              
+              {{ form_widget(productForm._token) }}
+              
+              <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('admin_product_index') }}" class="btn btn-outline-secondary">
+                  <i class="fas fa-times me-2"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-lg" style="background-color: var(--primary-color); color: white;">
+                  <i class="fas fa-save me-2"></i> Update Product
+                </button>
+              </div>
+            {{ form_end(productForm, {render_rest: false}) }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+            <h5 class="mb-0"><i class="fas fa-eye me-2"></i> Product Preview</h5>
+          </div>
+          <div class="card-body p-4 text-center">
+            {% if product is defined and product.image is defined and product.image %}
+              <img src="/{{ product.image }}" class="img-fluid rounded mb-3" style="max-height: 200px;" alt="{{ product.name }}">
+            {% else %}
+              <div class="placeholder-image mb-3" style="height: 200px; background-color: var(--light-color); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-image" style="font-size: 3rem; color: #ccc;"></i>
+              </div>
+            {% endif %}
+            
+            <h5 class="product-name mb-2">{{ product is defined ? product.name : 'Product Name' }}</h5>
+            <p class="price fw-bold mb-2">{{ product is defined ? product.price : '0.00' }} TND</p>
+            <div class="category mb-3">
+              <span class="badge" style="background-color: var(--primary-color);">
+                {{ product is defined and product.category is defined ? product.category : 'Category' }}
+              </span>
+            </div>
+            <p class="description text-muted small">
+              {{ product is defined and product.description ? product.description|slice(0, 100) ~ (product.description|length > 100 ? '...' : '') : 'Product description preview will appear here.' }}
+            </p>
+          </div>
+        </div>
+        
+        <div class="card shadow-sm border-0">
+          <div class="card-header p-3" style="background-color: var(--secondary-color); color: white;">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Tips</h5>
+          </div>
+          <div class="card-body p-4">
+            <ul class="list-unstyled mb-0">
+              <li class="mb-3">
+                <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i>
+                Use descriptive product names
+              </li>
+              <li class="mb-3">
+                <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i>
+                Add detailed descriptions with benefits
+              </li>
+              <li class="mb-3">
+                <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i>
+                Upload high-quality product images
+              </li>
+              <li class="mb-3">
+                <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i>
+                Keep stock levels accurate
+              </li>
+              <li>
+                <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i>
+                Choose the correct product category
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Live preview of product changes
+    const nameInput = document.querySelector('input[name$="[name]"]');
+    const priceInput = document.querySelector('input[name$="[price]"]');
+    const descInput = document.querySelector('textarea[name$="[description]"]');
+    const categorySelect = document.querySelector('select[name$="[category]"]');
+    const imageInput = document.querySelector('input[name$="[image]"]');
+    
+    const previewName = document.querySelector('.product-name');
+    const previewPrice = document.querySelector('.price');
+    const previewDesc = document.querySelector('.description');
+    const previewCategory = document.querySelector('.category .badge');
+    const previewImage = document.querySelector('.card-body img');
+    const placeholderImage = document.querySelector('.placeholder-image');
+    
+    if (nameInput) {
+      nameInput.addEventListener('input', function() {
+        previewName.textContent = this.value || 'Product Name';
+      });
+    }
+    
+    if (priceInput) {
+      priceInput.addEventListener('input', function() {
+        previewPrice.textContent = (this.value || '0.00') + ' TND';
+      });
+    }
+    
+    if (descInput) {
+      descInput.addEventListener('input', function() {
+        const text = this.value || 'Product description preview will appear here.';
+        previewDesc.textContent = text.length > 100 ? text.slice(0, 100) + '...' : text;
+      });
+    }
+    
+    if (categorySelect) {
+      categorySelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        previewCategory.textContent = selectedOption.text || 'Category';
+      });
+    }
+    
+    if (imageInput) {
+      imageInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            if (previewImage) {
+              previewImage.src = e.target.result;
+            } else if (placeholderImage) {
+              placeholderImage.innerHTML = '';
+              const newImg = document.createElement('img');
+              newImg.src = e.target.result;
+              newImg.className = 'img-fluid rounded mb-3';
+              newImg.style.maxHeight = '200px';
+              placeholderImage.parentNode.replaceChild(newImg, placeholderImage);
+            }
+          }
+          
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}
 {% endblock %}

@@ -3,6 +3,109 @@
 {% block title %}About Us - Nefta Dates{% endblock %}
 
 {% block body %}
-<h1>About Us</h1>
-<p>Welcome to Nefta Dates. We source the finest date plates directly from Nefta, Tunisia, ensuring premium quality and taste. Our mission is to bring authentic Tunisian dates to your table.</p>
+<section class="about" id="about">
+    <div class="container">
+        <h2 class="section-title">Our Story</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Tradition Since 1985</h3>
+                <p>Founded in the oasis town of Nefta, our family has been cultivating premium dates for three generations. Our dates are grown using traditional methods passed down through the centuries, combined with modern sustainable farming practices.</p>
+                <p>The unique microclimate of the Nefta oasis, with its natural springs and mineral-rich soil, gives our dates their distinctive sweet flavor and soft texture that can't be found anywhere else in the world.</p>
+                <p>We hand-select each date at peak ripeness and carefully package them to preserve their natural goodness. From our family to yours, we invite you to taste the difference that tradition and care can make.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1603569283847-aa295f0d016a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Date Farm in Nefta" style="width: 100%; border-radius: 10px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why Choose Nefta Dates</h2>
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="mb-4">
+                        <i class="fas fa-leaf fa-3x" style="color: var(--primary-color);"></i>
+                    </div>
+                    <h3>Organic Farming</h3>
+                    <p>Our dates are grown without synthetic pesticides or fertilizers, using only natural methods that respect the environment.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="mb-4">
+                        <i class="fas fa-heart fa-3x" style="color: var(--primary-color);"></i>
+                    </div>
+                    <h3>Rich in Nutrients</h3>
+                    <p>Packed with fiber, potassium, magnesium and antioxidants, our dates are a natural energy booster and digestive aid.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="mb-4">
+                        <i class="fas fa-award fa-3x" style="color: var(--primary-color);"></i>
+                    </div>
+                    <h3>Premium Quality</h3>
+                    <p>Each date is hand-selected for perfect ripeness and texture, ensuring consistent quality in every package.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="mb-4">
+                        <i class="fas fa-truck fa-3x" style="color: var(--primary-color);"></i>
+                    </div>
+                    <h3>Fast Shipping</h3>
+                    <p>We carefully package and quickly ship your order to ensure maximum freshness when it arrives at your door.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .about {
+        padding: 5rem 0;
+        background-color: var(--white);
+    }
+    
+    .about-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    
+    .about-text {
+        flex: 1;
+        min-width: 300px;
+        padding-right: 2rem;
+    }
+    
+    .about-image {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+    
+    .features {
+        padding: 5rem 0;
+        background-color: var(--light-color);
+    }
+    
+    @media (max-width: 768px) {
+        .about-content {
+            flex-direction: column;
+        }
+        
+        .about-text {
+            padding-right: 0;
+            margin-bottom: 2rem;
+        }
+    }
+</style>
 {% endblock %}

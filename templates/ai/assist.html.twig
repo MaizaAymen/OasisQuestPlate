@@ -1,49 +1,648 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Chat with AI Assistant{% endblock %}
+{% block title %}Chat with AI Assistant - Nefta Dates{% endblock %}
 
 {% block stylesheets %}
   {{ parent() }}
+  <style>
+    .ai-assistant-section {
+      margin-top: 90px;
+      min-height: calc(100vh - 90px);
+      background-color: var(--light-color);
+    }
+    
+    .chatgpt-container {
+      display: flex;
+      height: calc(100vh - 150px);
+      max-width: 1400px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .chatgpt-sidebar {
+      width: 260px;
+      background-color: var(--secondary-color);
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .new-chat-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 10px 15px;
+      width: 100%;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .new-chat-btn:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    
+    .history-item {
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 5px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+    
+    .history-item:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+    
+    .history-item.active {
+      background-color: var(--primary-color);
+      color: var(--secondary-color);
+      font-weight: bold;
+    }
+    
+    .chatgpt-main {
+      flex-grow: 1;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eaeaea;
+      font-weight: bold;
+      color: var(--secondary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--light-color);
+    }
+    
+    .chat-header::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #4caf50;
+      margin-right: 6px;
+    }
+    
+    .chat-messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .welcome-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .welcome-icon {
+      font-size: 4rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+    
+    .welcome-title {
+      color: var(--secondary-color);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .welcome-text {
+      color: #666;
+      max-width: 600px;
+      margin-bottom: 30px;
+    }
+    
+    .suggestion-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      max-width: 700px;
+    }
+    
+    .suggestion-item {
+      background-color: var(--light-color);
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .suggestion-item:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .message {
+      display: flex;
+      gap: 16px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    
+    .message.user {
+      background-color: #f0f7ff;
+    }
+    
+    .message.assistant {
+      background-color: #f9f5eb;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .message.user .avatar {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .message.assistant .avatar {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    .message-content {
+      flex-grow: 1;
+    }
+    
+    .message-text p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .input-area {
+      padding: 20px;
+      border-top: 1px solid #eaeaea;
+    }
+    
+    .input-container {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 15px;
+      background-color: white;
+    }
+    
+    .input-container:focus-within {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(212, 167, 98, 0.2);
+    }
+    
+    #ai-query {
+      flex-grow: 1;
+      border: none;
+      outline: none;
+      padding: 10px 0;
+      resize: none;
+      font-family: inherit;
+      background-color: transparent;
+    }
+    
+    #ai-submit {
+      background-color: var(--primary-color);
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #ai-submit:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    #ai-submit:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+    
+    /* Responsiveness */
+    @media (max-width: 768px) {
+      .chatgpt-container {
+        flex-direction: column;
+        height: calc(100vh - 100px);
+      }
+      
+      .chatgpt-sidebar {
+        width: 100%;
+        height: 60px;
+        padding: 10px;
+        flex-direction: row;
+        align-items: center;
+      }
+      
+      .new-chat-btn {
+        width: auto;
+        margin-bottom: 0;
+        margin-right: 10px;
+      }
+      
+      .history-list {
+        display: flex;
+        overflow-x: auto;
+        height: 40px;
+        align-items: center;
+      }
+      
+      .history-item {
+        white-space: nowrap;
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+    }
+  </style>
 {% endblock %}
 
 {% block body %}
-<div class="chatgpt-container">
-  <!-- Sidebar -->
-  <div class="chatgpt-sidebar">
-    <button class="new-chat-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      New chat
-    </button>
-    
-    <ul class="history-list">
-      <li class="history-item text-muted">No previous chats</li>
-    </ul>
-  </div>
-  
-  <!-- Main chat area -->
-  <div class="chatgpt-main">
-    <div class="chat-header">
-      Chat with AI Assistant
+<section class="ai-assistant-section">
+  <div class="container py-4">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="section-title text-center">Virtual Date Palm Expert</h2>
+        <p class="text-center text-muted mb-4">Get instant answers about our dates, recipes, health benefits, and more!</p>
+      </div>
     </div>
     
-    <div id="chat-messages" class="chat-messages">
-      <!-- Messages will be added here dynamically -->
-    </div>
-    
-    <div class="input-area">
-      <div class="input-container">
-        <textarea id="ai-query" rows="1" placeholder="Send a message"></textarea>
-        <button id="ai-submit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <div class="chatgpt-container">
+      <!-- Sidebar -->
+      <div class="chatgpt-sidebar">
+        <button class="new-chat-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          New chat
         </button>
+        
+        <ul class="history-list">
+          <li class="history-item text-muted">No previous chats</li>
+        </ul>
+      </div>
+      
+      <!-- Main chat area -->
+      <div class="chatgpt-main">
+        <div class="chat-header">
+          <i class="fas fa-robot me-2"></i> Nefta Dates Assistant
+        </div>
+        
+        <div id="chat-messages" class="chat-messages">
+          <!-- Welcome message will be shown initially -->
+          <div class="welcome-container">
+            <div class="welcome-icon">
+              <i class="fas fa-date"></i>🌴
+            </div>
+            <h3 class="welcome-title">Welcome to Nefta Dates AI Assistant!</h3>
+            <p class="welcome-text">I'm here to help you with information about our premium quality Tunisian dates, recipe ideas, nutritional benefits, or any questions about our products.</p>
+            
+            <div class="suggestion-container">
+              <div class="suggestion-item">What makes Tunisian dates special?</div>
+              <div class="suggestion-item">Recommend me a recipe with dates</div>
+              <div class="suggestion-item">Health benefits of dates</div>
+              <div class="suggestion-item">How to store dates properly?</div>
+              <div class="suggestion-item">Which dates are best for diabetics?</div>
+              <div class="suggestion-item">Do you offer international shipping?</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="input-area">
+          <div class="input-container">
+            <textarea id="ai-query" rows="1" placeholder="Type your question about our dates..."></textarea>
+            <button id="ai-submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chat-messages');
+    const aiQuery = document.getElementById('ai-query');
+    const aiSubmit = document.getElementById('ai-submit');
+    const newChatBtn = document.querySelector('.new-chat-btn');
+    const suggestionItems = document.querySelectorAll('.suggestion-item');
+    
+    // Auto-resize textarea
+    aiQuery.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+    
+    // Handle suggestions click
+    suggestionItems.forEach(item => {
+      item.addEventListener('click', function() {
+        aiQuery.value = this.textContent;
+        aiQuery.dispatchEvent(new Event('input'));
+        aiSubmit.click();
+      });
+    });
+    
+    // Submit message when Enter is pressed (without Shift)
+    aiQuery.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (aiQuery.value.trim()) {
+          aiSubmit.click();
+        }
+      }
+    });
+    
+    // Submit message
+    aiSubmit.addEventListener('click', function() {
+      const query = aiQuery.value.trim();
+      if (!query) return;
+      
+      // Remove welcome container
+      const welcomeContainer = document.querySelector('.welcome-container');
+      if (welcomeContainer) {
+        welcomeContainer.remove();
+      }
+      
+      // Add user message
+      addMessage('user', query);
+      
+      // Clear input
+      aiQuery.value = '';
+      aiQuery.style.height = 'auto';
+      
+      // Disable submit button while processing
+      aiSubmit.disabled = true;
+      
+      // Simulate typing indicator
+      const typingMessage = addMessage('assistant', '<div class="typing-indicator"><span></span><span></span><span></span></div>');
+      
+      // Simulate AI response (replace with actual API call)
+      setTimeout(() => {
+        // Remove typing indicator
+        typingMessage.remove();
+        
+        // Generate response based on query keywords
+        let response = '';
+        
+        if (query.toLowerCase().includes('special') || query.toLowerCase().includes('tunisian dates')) {
+          response = `
+            <p>Tunisian dates, particularly from the Nefta region, are known worldwide for their exceptional quality! Here's what makes them special:</p>
+            <ul>
+              <li><strong>Perfect Climate:</strong> Our dates grow in the ideal desert climate with hot days and cool nights.</li>
+              <li><strong>Rich Soil:</strong> The oasis soil provides unique minerals that enhance flavor.</li>
+              <li><strong>Traditional Harvesting:</strong> We still use time-honored hand-harvesting techniques.</li>
+              <li><strong>Natural Sweetness:</strong> Our dates have a perfect balance of sweetness without added sugars.</li>
+              <li><strong>Variety:</strong> From premium Deglet Nour to rare Menakher dates, we offer incredible diversity.</li>
+            </ul>
+            <p>Would you like to try our premium date selection box?</p>
+          `;
+        } else if (query.toLowerCase().includes('recipe')) {
+          response = `
+            <p>Here's a delicious recipe using our premium dates:</p>
+            <p><strong>Date & Walnut Energy Balls</strong></p>
+            <p><strong>Ingredients:</strong></p>
+            <ul>
+              <li>1 cup Nefta Deglet Nour dates (pitted)</li>
+              <li>1/2 cup walnuts</li>
+              <li>1/4 cup almond flour</li>
+              <li>2 tbsp coconut oil</li>
+              <li>1 tbsp honey</li>
+              <li>1 tsp cinnamon</li>
+              <li>Pinch of salt</li>
+              <li>Shredded coconut for coating</li>
+            </ul>
+            <p><strong>Instructions:</strong></p>
+            <ol>
+              <li>Process dates and walnuts in a food processor until finely chopped.</li>
+              <li>Add remaining ingredients except coconut and pulse until well combined.</li>
+              <li>Roll into 1-inch balls, then coat with shredded coconut.</li>
+              <li>Refrigerate for at least 30 minutes before serving.</li>
+            </ol>
+            <p>Would you like more recipes or shall I recommend dates that would work best for this?</p>
+          `;
+        } else if (query.toLowerCase().includes('health') || query.toLowerCase().includes('benefits')) {
+          response = `
+            <p>Dates are not just delicious, they're incredibly nutritious! Here are some key health benefits:</p>
+            <ul>
+              <li><strong>Fiber Rich:</strong> Excellent for digestive health (7-8g fiber per 100g)</li>
+              <li><strong>Minerals:</strong> High in potassium, magnesium, copper, and manganese</li>
+              <li><strong>Antioxidants:</strong> Contains flavonoids, carotenoids, and phenolic acid</li>
+              <li><strong>Natural Energy:</strong> Perfect pre-workout snack with quick natural sugars</li>
+              <li><strong>Heart Health:</strong> May help reduce cholesterol and triglycerides</li>
+              <li><strong>Brain Function:</strong> Antioxidants may help reduce inflammation linked to neurological diseases</li>
+            </ul>
+            <p>Our premium Tunisian dates maintain all these benefits as they're minimally processed and contain no additives.</p>
+          `;
+        } else if (query.toLowerCase().includes('store')) {
+          response = `
+            <p>Here are the best ways to store your premium Nefta dates:</p>
+            <p><strong>Short-term storage (up to 1 month):</strong></p>
+            <ul>
+              <li>Keep at room temperature in an airtight container away from direct sunlight</li>
+              <li>Ideal temperature is 20-22°C (68-72°F)</li>
+            </ul>
+            <p><strong>Medium-term storage (1-3 months):</strong></p>
+            <ul>
+              <li>Refrigerate in an airtight container</li>
+              <li>This helps maintain freshness and prevent sugar crystallization</li>
+            </ul>
+            <p><strong>Long-term storage (3+ months):</strong></p>
+            <ul>
+              <li>Freeze in airtight freezer bags or containers</li>
+              <li>Dates can be frozen for up to a year with minimal quality loss</li>
+              <li>Defrost at room temperature for 2-3 hours before consuming</li>
+            </ul>
+            <p>Pro tip: If your dates become too dry, you can rejuvenate them by lightly steaming them for 1-2 minutes.</p>
+          `;
+        } else if (query.toLowerCase().includes('diabetic') || query.toLowerCase().includes('diabetes')) {
+          response = `
+            <p>For people managing diabetes who still want to enjoy dates, here are my recommendations:</p>
+            <ul>
+              <li><strong>Barhi dates:</strong> Lower on the glycemic index compared to other varieties</li>
+              <li><strong>Dayri dates:</strong> Contain less sugar than popular varieties like Medjool</li>
+              <li><strong>Zahidi dates:</strong> Have a somewhat lower sugar content and more fiber</li>
+            </ul>
+            <p>Important guidelines when consuming dates if you have diabetes:</p>
+            <ul>
+              <li>Portion control is key - limit to 1-2 dates per serving</li>
+              <li>Pair with protein (like nuts or cheese) to slow sugar absorption</li>
+              <li>Always monitor your blood glucose response</li>
+              <li>Consult with your healthcare provider about including dates in your diet</li>
+            </ul>
+            <p>We offer small sample packs of our varieties so you can test which ones work best with your body.</p>
+          `;
+        } else if (query.toLowerCase().includes('shipping') || query.toLowerCase().includes('delivery')) {
+          response = `
+            <p>Yes, we do offer international shipping! Here's our shipping information:</p>
+            <p><strong>Domestic Shipping (Tunisia):</strong></p>
+            <ul>
+              <li>Free shipping on orders over 50 TND</li>
+              <li>Standard delivery: 1-3 business days</li>
+              <li>Express delivery: Next day (when ordered before 1 PM)</li>
+            </ul>
+            <p><strong>International Shipping:</strong></p>
+            <ul>
+              <li>Europe: 3-5 business days (15€ shipping fee, free over 100€)</li>
+              <li>North America: 5-7 business days (25€ shipping fee, free over 150€)</li>
+              <li>Middle East: 3-6 business days (20€ shipping fee, free over 120€)</li>
+              <li>Rest of World: 7-14 business days (pricing varies by location)</li>
+            </ul>
+            <p>All international orders are shipped with tracking. We use vacuum-sealed packaging to ensure freshness during transit.</p>
+            <p>Would you like information about our bulk shipping options?</p>
+          `;
+        } else {
+          response = `
+            <p>Thank you for your question! I'd be happy to help with information about our premium Tunisian dates.</p>
+            <p>We offer a variety of dates from the Nefta region, famous for their exceptional quality and taste. Our collection includes Deglet Nour (known as "Date of Light"), Medjool, Barhi, and other premium varieties.</p>
+            <p>Can you please let me know which specific aspect of our dates you're interested in learning more about? For example:</p>
+            <ul>
+              <li>Specific date varieties and their characteristics</li>
+              <li>Nutritional information and health benefits</li>
+              <li>Recipes and culinary uses</li>
+              <li>Storage recommendations</li>
+              <li>Gift boxes and special assortments</li>
+            </ul>
+            <p>I'm here to provide you with detailed information!</p>
+          `;
+        }
+        
+        addMessage('assistant', response);
+        
+        // Enable submit button
+        aiSubmit.disabled = false;
+        
+        // Add chat to history if not already there
+        const historyList = document.querySelector('.history-list');
+        if (historyList.querySelector('.text-muted')) {
+          historyList.innerHTML = '';
+        }
+        
+        // Add to history (max 5 items shown)
+        const historyItem = document.createElement('li');
+        historyItem.className = 'history-item';
+        historyItem.textContent = query.length > 25 ? query.substring(0, 25) + '...' : query;
+        historyList.prepend(historyItem);
+        
+        // Limit history items
+        const historyItems = historyList.querySelectorAll('.history-item:not(.text-muted)');
+        if (historyItems.length > 5) {
+          historyItems[historyItems.length - 1].remove();
+        }
+      }, 1500);
+    });
+    
+    // Add message to chat
+    function addMessage(type, content) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${type}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.innerHTML = type === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+      
+      const messageContent = document.createElement('div');
+      messageContent.className = 'message-content';
+      
+      const messageText = document.createElement('div');
+      messageText.className = 'message-text';
+      messageText.innerHTML = content;
+      
+      messageContent.appendChild(messageText);
+      messageDiv.appendChild(avatar);
+      messageDiv.appendChild(messageContent);
+      
+      chatMessages.appendChild(messageDiv);
+      
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      return messageDiv;
+    }
+    
+    // Handle new chat button
+    newChatBtn.addEventListener('click', function() {
+      // Clear chat messages
+      chatMessages.innerHTML = '';
+      
+      // Add welcome container back
+      chatMessages.innerHTML = `
+        <div class="welcome-container">
+          <div class="welcome-icon">
+            <i class="fas fa-date"></i>🌴
+          </div>
+          <h3 class="welcome-title">Welcome to Nefta Dates AI Assistant!</h3>
+          <p class="welcome-text">I'm here to help you with information about our premium quality Tunisian dates, recipe ideas, nutritional benefits, or any questions about our products.</p>
+          
+          <div class="suggestion-container">
+            <div class="suggestion-item">What makes Tunisian dates special?</div>
+            <div class="suggestion-item">Recommend me a recipe with dates</div>
+            <div class="suggestion-item">Health benefits of dates</div>
+            <div class="suggestion-item">How to store dates properly?</div>
+            <div class="suggestion-item">Which dates are best for diabetics?</div>
+            <div class="suggestion-item">Do you offer international shipping?</div>
+          </div>
+        </div>
+      `;
+      
+      // Re-attach event listeners to new suggestion items
+      document.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+          aiQuery.value = this.textContent;
+          aiQuery.dispatchEvent(new Event('input'));
+          aiSubmit.click();
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

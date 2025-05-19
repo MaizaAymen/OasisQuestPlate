@@ -3,20 +3,119 @@
 {% block title %}Checkout - Nefta Dates{% endblock %}
 
 {% block body %}
-<h1>Checkout</h1>
-{{ form_start(checkoutForm) }}
-  <div class="mb-3">
-    {{ form_label(checkoutForm.address) }}
-    {{ form_widget(checkoutForm.address, { 'attr': {'class': 'form-control'} }) }}
+<section class="checkout-section py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <h2 class="section-title mb-4">Checkout</h2>
+        <div class="checkout-form-container bg-white p-4 rounded shadow-sm mb-4">
+          <h4 class="mb-4 border-bottom pb-3">Shipping Information</h4>
+          {{ form_start(checkoutForm, {'attr': {'class': 'checkout-form'}}) }}
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                {{ form_label(checkoutForm.address, 'Delivery Address', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(checkoutForm.address, {'attr': {'class': 'form-control', 'placeholder': 'Enter your full address'}}) }}
+                {{ form_errors(checkoutForm.address) }}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                {{ form_label(checkoutForm.city, 'City', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(checkoutForm.city, {'attr': {'class': 'form-control', 'placeholder': 'Enter city'}}) }}
+                {{ form_errors(checkoutForm.city) }}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                {{ form_label(checkoutForm.postalCode, 'Postal Code', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(checkoutForm.postalCode, {'attr': {'class': 'form-control', 'placeholder': 'Enter postal code'}}) }}
+                {{ form_errors(checkoutForm.postalCode) }}
+              </div>
+            </div>
+            
+            <div class="mt-4">
+              <button type="submit" class="btn btn-lg" style="background-color: var(--primary-color); color: white;">
+                <i class="fas fa-check-circle me-2"></i> Place Order
+              </button>
+            </div>
+          {{ form_end(checkoutForm) }}
+        </div>
+      </div>
+      
+      <div class="col-lg-4">
+        <div class="order-summary bg-white p-4 rounded shadow-sm">
+          <h4 class="mb-4 border-bottom pb-3">Order Summary</h4>
+          
+          {% if cart is defined and cart.items|length > 0 %}
+            {% set total = 0 %}
+            {% for item in cart.items %}
+              {% set itemTotal = item.product.price * item.quantity %}
+              {% set total = total + itemTotal %}
+              <div class="d-flex justify-content-between mb-3">
+                <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                <span>{{ itemTotal|number_format(2) }} TND</span>
+              </div>
+            {% endfor %}
+            
+            <div class="border-top pt-3 mt-3">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Subtotal</span>
+                <span>{{ total|number_format(2) }} TND</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Shipping</span>
+                <span>7.00 TND</span>
+              </div>
+              <div class="d-flex justify-content-between fw-bold mt-2 pt-2 border-top">
+                <span>Total</span>
+                <span>{{ (total + 7)|number_format(2) }} TND</span>
+              </div>
+            </div>
+          {% else %}
+            <p class="text-center">Your cart is empty</p>
+          {% endif %}
+          
+          <div class="mt-4">
+            <div class="payment-methods">
+              <h6>Payment Methods</h6>
+              <div class="d-flex gap-2 mt-2">
+                <i class="fab fa-cc-visa fs-2" style="color: #1a1f71;"></i>
+                <i class="fab fa-cc-mastercard fs-2" style="color: #eb001b;"></i>
+                <i class="fab fa-cc-paypal fs-2" style="color: #003087;"></i>
+                <i class="fas fa-money-bill-wave fs-2" style="color: #2e7d32;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="mb-3">
-    {{ form_label(checkoutForm.city) }}
-    {{ form_widget(checkoutForm.city, { 'attr': {'class': 'form-control'} }) }}
-  </div>
-  <div class="mb-3">
-    {{ form_label(checkoutForm.postalCode) }}
-    {{ form_widget(checkoutForm.postalCode, { 'attr': {'class': 'form-control'} }) }}
-  </div>
-  <button class="btn btn-primary">Place Order</button>
-{{ form_end(checkoutForm) }}
+</section>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('.checkout-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        let valid = true;
+        const inputs = form.querySelectorAll('input.form-control');
+        
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            valid = false;
+          } else {
+            input.classList.remove('is-invalid');
+          }
+        });
+        
+        if (!valid) {
+          e.preventDefault();
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}
