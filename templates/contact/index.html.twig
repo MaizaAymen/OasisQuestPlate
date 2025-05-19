@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact Us - Nefta Dates{% endblock %}
+
+{% block body %}
+<h1>Contact Us</h1>
+<p>If you have any questions, please email us at <a href="mailto:info@neftadates.com">info@neftadates.com</a> or use the form below.</p>
+<form>
+  <div class="mb-3">
+    <label for="contactName" class="form-label">Name</label>
+    <input type="text" class="form-control" id="contactName" required>
+  </div>
+  <div class="mb-3">
+    <label for="contactEmail" class="form-label">Email</label>
+    <input type="email" class="form-control" id="contactEmail" required>
+  </div>
+  <div class="mb-3">
+    <label for="contactMessage" class="form-label">Message</label>
+    <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Send</button>
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome to Nefta Dates{% endblock %}
+
+{% block body %}
+<section class="hero mb-5">
+  <div class="overlay"></div>
+  <div class="content text-center">
+    {% if app.user %}
+      <div class="greeting mb-4">Hello {{ app.user.email|split('@')[0]|capitalize }}, welcome back!</div>
+    {% endif %}
+    <h1 class="display-3">Nefta Date Plates</h1>
+    <p class="lead">Experience the taste of premium Tunisian dates.</p>
+    <a href="{{ path('app_shop') }}" class="btn btn-primary btn-lg">Shop Now</a>
+  </div>
+</section>
+
+<section class="gallery py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Our Collections</h2>
+    <div class="row g-4">
+      {% for img in ['dates1.jpg', 'dates2.jpg', 'dates3.jpg', 'dates1.jpg'] %}
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm">
+            <img src="/images/{{ img }}" class="card-img-top" alt="Date Plate">
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat with AI Assistant{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="chatgpt-container">
+  <!-- Sidebar -->
+  <div class="chatgpt-sidebar">
+    <button class="new-chat-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      New chat
+    </button>
+    
+    <ul class="history-list">
+      <li class="history-item text-muted">No previous chats</li>
+    </ul>
+  </div>
+  
+  <!-- Main chat area -->
+  <div class="chatgpt-main">
+    <div class="chat-header">
+      Chat with AI Assistant
+    </div>
+    
+    <div id="chat-messages" class="chat-messages">
+      <!-- Messages will be added here dynamically -->
+    </div>
+    
+    <div class="input-area">
+      <div class="input-container">
+        <textarea id="ai-query" rows="1" placeholder="Send a message"></textarea>
+        <button id="ai-submit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const historyList = document.querySelector('.history-list');
+  const chatMessages = document.getElementById('chat-messages');
+  const input = document.getElementById('ai-query');
+  const btn = document.getElementById('ai-submit');
+
+  // Conversation storage
+  let storedConvos = JSON.parse(localStorage.getItem('chatConversations') || '[]');
+  let conversation = [];
+  let currentConvId = null;
+
+  function renderSidebar() {
+    historyList.innerHTML = '';
+    if (storedConvos.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'history-item text-muted';
+      li.textContent = 'No previous chats';
+      historyList.appendChild(li);
+    } else {
+      storedConvos.forEach(conv => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.dataset.id = conv.id;
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'history-title';
+        titleSpan.textContent = conv.title;
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-chat-btn';
+        delBtn.textContent = '×';
+        delBtn.title = 'Delete chat';
+
+        li.append(titleSpan, delBtn);
+        historyList.appendChild(li);
+      });
+    }
+  }
+  renderSidebar();
+
+  function saveConversation() {
+    if (conversation.length === 0) return;
+    const firstUser = conversation.find(m => m.role === 'user');
+    const title = firstUser ?
+      (firstUser.content.slice(0, 28) + (firstUser.content.length > 28 ? '...' : '')) :
+      'New Chat';
+    const newConv = { id: Date.now().toString(), title, messages: [...conversation] };
+    storedConvos.unshift(newConv);
+    localStorage.setItem('chatConversations', JSON.stringify(storedConvos));
+    renderSidebar();
+  }
+
+  function loadConversation(id) {
+    const conv = storedConvos.find(c => c.id === id);
+    if (!conv) return;
+    currentConvId = id;
+    conversation = conv.messages.slice();
+    chatMessages.innerHTML = '';
+    conversation.forEach(m => displayMessage(m.role, m.content));
+  }
+
+  historyList.addEventListener('click', function(e) {
+    const delBtn = e.target.closest('.delete-chat-btn');
+    if (delBtn) {
+      const li = delBtn.closest('.history-item');
+      const id = li.dataset.id;
+      storedConvos = storedConvos.filter(c => c.id !== id);
+      localStorage.setItem('chatConversations', JSON.stringify(storedConvos));
+      if (id === currentConvId) {
+        conversation = [];
+        chatMessages.innerHTML = '';
+        currentConvId = null;
+      }
+      renderSidebar();
+      return;
+    }
+    const li = e.target.closest('.history-item');
+    if (li && li.dataset.id) {
+      const id = li.dataset.id;
+      loadConversation(id);
+    }
+  });
+
+  document.querySelector('.new-chat-btn').addEventListener('click', function() {
+    saveConversation();
+    conversation = [];
+    chatMessages.innerHTML = '';
+    input.value = '';
+    input.style.height = 'auto';
+    btn.disabled = false;
+    input.focus();
+  });
+
+  input.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  btn.addEventListener('click', sendMessage);
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    conversation.push({ role: 'user', content: text });
+    displayMessage('user', text);
+    input.value = '';
+    input.style.height = 'auto';
+    btn.disabled = true;
+    displayLoadingMessage();
+
+    fetch('{{ path('app_ai_assist') }}', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: conversation })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const loader = document.querySelector('.loading-message-row');
+      if (loader) loader.remove();
+      if (data.message) {
+        conversation.push({ role: 'assistant', content: data.message });
+        displayMessage('assistant', data.message);
+      }
+      btn.disabled = false;
+      input.focus();
+    })
+    .catch(err => {
+      displayMessage('assistant', 'Error: ' + err.message);
+      btn.disabled = false;
+    });
+  }
+
+  function displayMessage(role, content) {
+    const row = document.createElement('div');
+    row.className = `message-row ${role}`;
+    const container = document.createElement('div');
+    container.className = 'message-container d-flex';
+    const avatar = document.createElement('div');
+    avatar.className = `avatar ${role}`;
+    avatar.innerHTML = role === 'user' ?
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const msg = document.createElement('div');
+    msg.className = 'message-content';
+    msg.textContent = content;
+    container.append(avatar, msg);
+    row.appendChild(container);
+    chatMessages.appendChild(row);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function displayLoadingMessage() {
+    const row = document.createElement('div');
+    row.className = 'message-row assistant loading-message-row';
+    const container = document.createElement('div');
+    container.className = 'message-container d-flex';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar assistant';
+    avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const loading = document.createElement('div');
+    loading.className = 'message-content loading-dots';
+    [1,2,3].forEach(i => {
+      const dot = document.createElement('div'); dot.className = 'loading-dot'; loading.appendChild(dot);
+    });
+    container.append(avatar, loading);
+    row.appendChild(container);
+    chatMessages.appendChild(row);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add New Product{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Plate-style form container */
+        .plate-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        
+        /* Plate edge effect */
+        .plate-container:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #f8f9fa;
+            border-radius: 20px;
+            z-index: -1;
+        }
+        
+        /* Floating dates animation */
+        .floating-dates {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .date-bubble {
+            position: absolute;
+            background: rgba(233, 236, 239, 0.6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: rgba(108, 117, 125, 0.7);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+            }
+        }
+        
+        /* Form styling */
+        h1 {
+            color: #343a40;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-success {
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Make form elements stand out over background */
+        form {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="plate-container">
+    <!-- Floating dates background -->
+    <div class="floating-dates" id="floatingDates"></div>
+    
+    <h1>Add New Product</h1>
+    {{ form_start(productForm) }}
+      {{ form_widget(productForm) }}
+      <button class="btn btn-success mt-3">Create Product</button>
+    {{ form_end(productForm) }}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create floating date bubbles
+            const container = document.getElementById('floatingDates');
+            const plateWidth = container.parentElement.offsetWidth;
+            const plateHeight = container.parentElement.offsetHeight;
+            
+            // Create 15 date bubbles
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'date-bubble';
+                
+                // Random size between 30px and 70px
+                const size = Math.random() * 40 + 30;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // Random position
+                bubble.style.left = `${Math.random() * plateWidth}px`;
+                bubble.style.top = `${plateHeight + size}px`;
+                
+                // Random date between 1-31
+                bubble.textContent = Math.floor(Math.random() * 31) + 1;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * -20;
+                bubble.style.animation = `float ${duration}s infinite linear`;
+                bubble.style.animationDelay = `${delay}s`;
+                
+                container.appendChild(bubble);
+            }
+        });
+    </script>
+{% endblock %}

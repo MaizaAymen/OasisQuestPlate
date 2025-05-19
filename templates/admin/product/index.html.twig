@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Products{% endblock %}
+
+{% block body %}
+<h1>Manage Products</h1>
+<a href="{{ path('admin_product_new') }}" class="btn btn-success mb-3">Add New Product</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }} TND</td>
+                <td><img src="/{{ product.image }}" alt="{{ product.name }}" width="50"></td>
+                <td>
+                    <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-info btn-sm">View</a>
+                    <a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                    <form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" style="display:inline-block;" onsubmit="return confirm('Delete this product?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">No products found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

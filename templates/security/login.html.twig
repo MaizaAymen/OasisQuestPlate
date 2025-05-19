@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login - Nefta Dates{% endblock %}
+
+{% block body %}
+<h1>Login</h1>
+{% if error %}
+    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+<form method="post">
+    <div class="mb-3">
+        <label for="inputEmail">Email</label>
+        <input type="email" name="_username" value="{{ last_username }}" id="inputEmail" required autofocus class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label for="inputPassword">Password</label>
+        <input type="password" name="_password" id="inputPassword" required class="form-control" />
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <button class="btn btn-primary">Login</button>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Your Cart - Nefta Dates{% endblock %}
+
+{% block body %}
+<h1>Your Shopping Cart</h1>
+{% if items is not empty %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price }} TND</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.subtotal }} TND</td>
+                <td>
+                    <a href="{{ path('app_cart_remove', {'id': item.product.id}) }}" class="btn btn-danger btn-sm">Remove</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="fw-bold">Total: {{ total }} TND</p>
+<a href="{{ path('app_checkout') }}" class="btn btn-success">Proceed to Checkout</a>
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+{% endblock %}

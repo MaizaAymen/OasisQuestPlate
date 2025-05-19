@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Details - Admin{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>User Details</h1>
+    
+    <div class="mb-4">
+        <a href="{{ path('admin_users_index') }}" class="btn btn-secondary">Back to Users List</a>
+    </div>
+    
+    <div class="row">
+        <!-- User Information Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>ID:</strong> {{ userData.user.id }}</p>
+                    <p><strong>Email:</strong> {{ userData.user.email }}</p>
+                    <p><strong>Roles:</strong>
+                        {% set roles = userData.user.roles|default([]) %}
+                        {% if roles is not iterable %}
+                            {% set roles = roles|json_encode|replace({'"': ''})|replace({'{': ''})|replace({'}': ''})|replace({'[': ''})|replace({']': ''})|split(',') %}
+                        {% endif %}
+                        {% for role in roles %}
+                            <span class="badge bg-{% if role == 'ROLE_ADMIN' %}danger{% elseif role == 'ROLE_USER' %}success{% else %}secondary{% endif %}">
+                                {{ role }}
+                            </span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Orders Card -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Order History</h5>
+                </div>
+                <div class="card-body">
+                    {% if userData.orders|length > 0 %}
+                        <div class="accordion" id="ordersAccordion">
+                            {% for order in userData.orders %}
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order{{ order.id }}">
+                                            Order #{{ order.id }} - {{ order.created_at|date('Y-m-d H:i') }}
+                                        </button>
+                                    </h2>
+                                    <div id="order{{ order.id }}" class="accordion-collapse collapse" data-bs-parent="#ordersAccordion">
+                                        <div class="accordion-body">
+                                            <p><strong>Shipping Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.postal_code }}</p>
+                                            <h6>Items:</h6>
+                                            <pre class="bg-light p-2">{{ order.items|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No orders found for this user.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat History Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Chat History with AI Assistant</h5>
+        </div>
+        <div class="card-body">
+            {% if userData.chatMessages|length > 0 %}
+                <div class="chat-window border rounded p-3" style="max-height: 500px; overflow-y: auto;">
+                    {% for message in userData.chatMessages %}
+                        <div class="mb-3 pb-2 {% if not loop.last %}border-bottom{% endif %}">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="badge {% if message.role == 'user' %}bg-primary{% else %}bg-secondary{% endif %} me-2">
+                                    {{ message.role|capitalize }}
+                                </span>
+                                <small class="text-muted">{{ message.created_at|date('Y-m-d H:i:s') }}</small>
+                            </div>
+                            <div class="ps-4">{{ message.content }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No chat messages found for this user.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

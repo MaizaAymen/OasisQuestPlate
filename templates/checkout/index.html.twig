@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout - Nefta Dates{% endblock %}
+
+{% block body %}
+<h1>Checkout</h1>
+{{ form_start(checkoutForm) }}
+  <div class="mb-3">
+    {{ form_label(checkoutForm.address) }}
+    {{ form_widget(checkoutForm.address, { 'attr': {'class': 'form-control'} }) }}
+  </div>
+  <div class="mb-3">
+    {{ form_label(checkoutForm.city) }}
+    {{ form_widget(checkoutForm.city, { 'attr': {'class': 'form-control'} }) }}
+  </div>
+  <div class="mb-3">
+    {{ form_label(checkoutForm.postalCode) }}
+    {{ form_widget(checkoutForm.postalCode, { 'attr': {'class': 'form-control'} }) }}
+  </div>
+  <button class="btn btn-primary">Place Order</button>
+{{ form_end(checkoutForm) }}
+{% endblock %}
