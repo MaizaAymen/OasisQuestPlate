@@ -17,6 +17,10 @@
                 --light-color: #f8f5f0;
                 --dark-color: #333;
                 --white: #ffffff;
+                --sidebar-width: 250px;
+                --sidebar-collapsed-width: 70px;
+                --header-height: 60px;
+                --transition-speed: 0.3s;
             }
             
             body {
@@ -27,6 +31,9 @@
                 margin: 0;
                 padding: 0;
                 line-height: 1.6;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
             }
 
             h1, h2, h3, h4 {
@@ -111,10 +118,204 @@
                 font-weight: bold;
             }
 
+            /* Sidebar Styles */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: var(--sidebar-width);
+                background-color: rgba(74, 44, 18, 0.95);
+                color: var(--white);
+                z-index: 1000;
+                transition: all var(--transition-speed) ease;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            .sidebar.collapsed {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            .sidebar-header {
+                height: var(--header-height);
+                display: flex;
+                align-items: center;
+                padding: 0 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                justify-content: space-between;
+            }
+            
+            .sidebar-logo {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--white);
+                transition: opacity var(--transition-speed);
+                white-space: nowrap;
+            }
+            
+            .sidebar-logo span {
+                color: var(--primary-color);
+            }
+            
+            .sidebar.collapsed .sidebar-logo {
+                display: none;
+            }
+            
+            .sidebar-toggle {
+                cursor: pointer;
+                background: transparent;
+                border: none;
+                color: var(--white);
+                font-size: 1.5rem;
+            }
+            
+            .sidebar-menu {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .sidebar-menu > li {
+                position: relative;
+            }
+            
+            .sidebar-menu > li > a {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                color: var(--white);
+                text-decoration: none;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+            }
+
+            .sidebar-menu > li > a:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: var(--primary-color);
+            }
+            
+            .sidebar-menu > li > a.active {
+                background-color: rgba(212, 167, 98, 0.15);
+                color: var(--primary-color);
+                border-left: 4px solid var(--primary-color);
+                font-weight: bold;
+            }
+
+            .sidebar-menu i {
+                margin-right: 15px;
+                min-width: 20px;
+                text-align: center;
+            }
+
+            .sidebar.collapsed .sidebar-menu span {
+                display: none;
+            }
+            
+            .sidebar-submenu {
+                list-style: none;
+                padding-left: 0;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            
+            .sidebar-menu > li.open > .sidebar-submenu {
+                max-height: 500px;
+            }
+            
+            .sidebar-submenu > li > a {
+                display: flex;
+                align-items: center;
+                padding: 10px 20px 10px 55px;
+                color: var(--white);
+                text-decoration: none;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+                font-size: 0.9rem;
+            }
+            
+            .sidebar-submenu > li > a:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+                color: var(--primary-color);
+            }
+            
+            .sidebar-submenu > li > a.active {
+                background-color: rgba(212, 167, 98, 0.15);
+                color: var(--primary-color);
+                font-weight: bold;
+            }
+
+            .sidebar-divider {
+                height: 1px;
+                width: 100%;
+                margin: 10px 0;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .user-profile {
+                display: flex;
+                align-items: center;
+                padding: 20px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: auto;
+            }
+
+            .user-profile .user-circle {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
+            }
+
+            .user-info {
+                transition: opacity var(--transition-speed);
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .user-info h5 {
+                margin: 0;
+                font-size: 1rem;
+                color: var(--white);
+            }
+
+            .user-info p {
+                margin: 0;
+                font-size: 0.8rem;
+                opacity: 0.7;
+            }
+
+            .sidebar.collapsed .user-info {
+                display: none;
+            }
+
+            .cart-indicator {
+                display: flex;
+                align-items: center;
+                margin-left: auto;
+                position: relative;
+            }
+            
             /* Main Container */
             .main-container {
-                padding-top: 6rem;
-                min-height: calc(100vh - 6rem);
+                flex: 1;
+                margin-left: var(--sidebar-width);
+                transition: margin-left var(--transition-speed) ease, width var(--transition-speed) ease;
+                width: calc(100% - var(--sidebar-width));
+                padding: 20px;
+                position: relative;
+                min-height: calc(100vh);
+            }
+            
+            body.sidebar-collapsed .main-container {
+                margin-left: var(--sidebar-collapsed-width);
+                width: calc(100% - var(--sidebar-collapsed-width));
             }
 
             /* Cards */
@@ -292,12 +493,54 @@
             
             /* Responsive adjustments */
             @media (max-width: 768px) {
-                header {
-                    position: relative;
+                .sidebar {
+                    transform: translateX(-100%);
+                    position: fixed;
+                    z-index: 1050;
+                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+                    width: 85%;
+                    max-width: 300px;
+                }
+                
+                .sidebar.show-mobile {
+                    transform: translateX(0);
                 }
                 
                 .main-container {
-                    padding-top: 1rem;
+                    margin-left: 0 !important;
+                    width: 100% !important;
+                    padding-top: 60px;
+                }
+                
+                .sidebar-mobile-toggle {
+                    display: block;
+                }
+                
+                body.sidebar-collapsed .main-container {
+                    margin-left: 0;
+                    width: 100%;
+                }
+                
+                /* Dim the background when sidebar is open on mobile */
+                body::after {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0);
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                    z-index: 1040;
+                    pointer-events: none;
+                }
+                
+                body.sidebar-mobile-open::after {
+                    visibility: visible;
+                    opacity: 0.5;
+                    pointer-events: auto;
                 }
             }
         </style>
@@ -312,88 +555,140 @@
     <body>
         {% set currentRoute = app.request.attributes.get('_route') %}
 
-        {% if currentRoute and currentRoute|slice(0,6) == 'admin_' %}
-            <div class="area"></div>
-            <nav class="main-menu">
-                <ul>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="{{ path('app_home') }}" class="sidebar-logo">Nefta<span>Dates</span></a>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="{{ path('app_home') }}" class="{{ currentRoute == 'app_home' ? 'active' : '' }}">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_about') }}" class="{{ currentRoute == 'app_about' ? 'active' : '' }}">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_shop') }}" class="{{ currentRoute == 'app_shop' ? 'active' : '' }}">
+                        <i class="fas fa-store"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_contact') }}" class="{{ currentRoute == 'app_contact' ? 'active' : '' }}">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </li>
+                
+                {% if app.user %}
+                    <li class="sidebar-divider"></li>
                     <li>
-                        <a href="{{ path('admin_product_index') }}">
-                            <span class="nav-icon"><i class="fa fa-box fa-2x"></i></span>
-                            <span class="nav-text">Products</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('admin_product_new') }}">
-                            <span class="nav-icon"><i class="fa fa-plus fa-2x"></i></span>
-                            <span class="nav-text">Add Product</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('admin_users_index') }}">
-                            <span class="nav-icon"><i class="fa fa-users fa-2x"></i></span>
-                            <span class="nav-text">Users</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="logout">
-                    <li>
-                        <a href="{{ path('app_logout') }}">
-                            <span class="nav-icon"><i class="fa fa-power-off fa-2x"></i></span>
-                            <span class="nav-text">Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        {% endif %}
-
-        <!-- Header -->
-        <header>
-            <nav class="navbar navbar-expand-lg">
-                <div class="container">
-                    <a class="navbar-brand" href="{{ path('app_shop') }}">Nefta<span>Dates</span></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-                            style="background-color: var(--primary-color);">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" href="{{ path('app_home') }}">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ path('app_about') }}">About</a></li>
-                            {% if app.user %}
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_shop') }}">Products</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_ai_assist_form') }}">Assistant</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_checkout') }}">Checkout</a></li>
+                        <a href="{{ path('app_cart') }}" class="{{ currentRoute == 'app_cart' ? 'active' : '' }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Cart</span>
+                            {% if app.session.get('cart')|length|default(0) > 0 %}
+                                <span class="cart-count ms-2">{{ app.session.get('cart')|length|default(0) }}</span>
                             {% endif %}
-                            <li class="nav-item"><a class="nav-link" href="{{ path('app_contact') }}">Contact</a></li>
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li class="nav-item"><a class="nav-link" href="{{ path('admin_product_index') }}">Admin</a></li>
-                            {% endif %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_checkout') }}" class="{{ currentRoute == 'app_checkout' ? 'active' : '' }}">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Checkout</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_ai_assist_form') }}" class="{{ currentRoute == 'app_ai_assist_form' ? 'active' : '' }}">
+                            <i class="fas fa-robot"></i>
+                            <span>Assistant</span>
+                        </a>
+                    </li>
+                {% endif %}
+                
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="sidebar-divider"></li>
+                    <li>
+                        <a href="#" class="submenu-toggle {{ currentRoute starts with 'admin_' ? 'active' : '' }}">
+                            <i class="fas fa-cogs"></i>
+                            <span>Admin</span>
+                            <i class="fas fa-chevron-down ms-auto"></i>
+                        </a>
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ path('admin_product_index') }}" class="{{ currentRoute == 'admin_product_index' ? 'active' : '' }}">
+                                    <i class="fas fa-box"></i>
+                                    <span>Products</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_product_new') }}" class="{{ currentRoute == 'admin_product_new' ? 'active' : '' }}">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Add Product</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_users_index') }}" class="{{ currentRoute == 'admin_users_index' ? 'active' : '' }}">
+                                    <i class="fas fa-users"></i>
+                                    <span>Users</span>
+                                </a>
+                            </li>
                         </ul>
-                        <ul class="navbar-nav ms-auto">
-                            {% if app.user %}
-                                <li class="nav-item d-flex align-items-center me-3">
-                                    <div class="user-circle me-2">{{ app.user.email|slice(0, 1)|upper }}</div>
-                                    <span class="nav-link">{{ (app.user.email|split('@')|first)|capitalize }}</span>
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Logout</a></li>
-                                <li class="nav-item">
-                                    <a class="nav-link cart-icon" href="{{ path('app_cart') }}">
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <span class="cart-count">{{ app.session.get('cart')|length|default(0) }}</span>
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Login</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ path('app_register') }}">Register</a></li>
-                            {% endif %}
-                        </ul>
+                    </li>
+                {% endif %}
+                
+                {% if not app.user %}
+                    <li class="sidebar-divider"></li>
+                    <li>
+                        <a href="{{ path('app_login') }}" class="{{ currentRoute == 'app_login' ? 'active' : '' }}">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_register') }}" class="{{ currentRoute == 'app_register' ? 'active' : '' }}">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Register</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            
+            {% if app.user %}
+                <div class="user-profile mt-auto">
+                    <div class="user-circle" style="background-color: var(--primary-color);">
+                        {{ app.user.email|slice(0, 1)|upper }}
                     </div>
+                    <div class="user-info">
+                        <h5>{{ (app.user.email|split('@')|first)|capitalize }}</h5>
+                        <p>{{ app.user.email }}</p>
+                    </div>
+                    <a href="{{ path('app_logout') }}" class="ms-auto text-white" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
                 </div>
-            </nav>
+            {% endif %}
+        </aside>
+
+        <!-- Top mini header for mobile -->
+        <header class="d-md-none bg-secondary py-2 px-3 text-white d-flex align-items-center">
+            <button class="sidebar-mobile-toggle me-3 bg-transparent border-0 text-white">
+                <i class="fas fa-bars"></i>
+            </button>
+            <span class="fw-bold">Nefta<span class="text-primary">Dates</span></span>
         </header>
 
         <div class="main-container">
-            <div class="container mt-4">
+            <div class="container-fluid">
                 {% block body %}{% endblock %}
             </div>
         </div>
@@ -406,12 +701,13 @@
                     <ul class="footer-links">
                         <li><a href="{{ path('app_home') }}">Home</a></li>
                         <li><a href="{{ path('app_about') }}">About Us</a></li>
-                        <li><a href="{{ path('app_shop') }}">Shop</a></li>
+                        <li><a href="{{ path('app_shop') }}">Products</a></li>
                         <li><a href="{{ path('app_cart') }}">Cart</a></li>
+                        <li><a href="{{ path('app_contact') }}">Contact</a></li>
                         {% if app.user %}
+                        <li><a href="{{ path('app_ai_assist_form') }}">Assistant</a></li>
                         <li><a href="{{ path('app_checkout') }}">Checkout</a></li>
                         {% endif %}
-                        <li><a href="{{ path('app_contact') }}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -446,8 +742,77 @@
         <!-- Custom JS -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // Sidebar toggle functionality
+                const sidebarToggle = document.getElementById('sidebarToggle');
+                const sidebar = document.getElementById('sidebar');
+                const body = document.body;
+                
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener('click', function() {
+                        sidebar.classList.toggle('collapsed');
+                        body.classList.toggle('sidebar-collapsed');
+                        
+                        // Store sidebar state in localStorage
+                        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+                    });
+                }
+                
+                // Mobile sidebar toggle
+                const mobileSidebarToggle = document.querySelector('.sidebar-mobile-toggle');
+                if (mobileSidebarToggle) {
+                    mobileSidebarToggle.addEventListener('click', function() {
+                        sidebar.classList.toggle('show-mobile');
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    });
+                }
+                
+                // Close mobile sidebar when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (sidebar.classList.contains('show-mobile') && 
+                        !sidebar.contains(event.target) && 
+                        !mobileSidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('show-mobile');
+                        document.body.classList.remove('sidebar-mobile-open');
+                    }
+                });
+                
+                // Check localStorage for saved sidebar state
+                if (localStorage.getItem('sidebarCollapsed') === 'true') {
+                    sidebar.classList.add('collapsed');
+                    body.classList.add('sidebar-collapsed');
+                }
+                
+                // Submenu toggle functionality
+                const submenuToggles = document.querySelectorAll('.submenu-toggle');
+                submenuToggles.forEach(toggle => {
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const parent = this.parentElement;
+                        parent.classList.toggle('open');
+                        
+                        const chevron = this.querySelector('.fa-chevron-down');
+                        if (chevron) {
+                            chevron.classList.toggle('fa-chevron-down');
+                            chevron.classList.toggle('fa-chevron-up');
+                        }
+                    });
+                });
+                
+                // Auto-open submenu if a child is active
+                document.querySelectorAll('.sidebar-submenu .active').forEach(activeLink => {
+                    const parentLi = activeLink.closest('li').parentElement.closest('li');
+                    if (parentLi) {
+                        parentLi.classList.add('open');
+                        const chevron = parentLi.querySelector('.fa-chevron-down');
+                        if (chevron) {
+                            chevron.classList.remove('fa-chevron-down');
+                            chevron.classList.add('fa-chevron-up');
+                        }
+                    }
+                });
+                
                 // Smooth scrolling for anchor links
-                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                document.querySelectorAll('a[href^="#"]:not(.submenu-toggle)').forEach(anchor => {
                     anchor.addEventListener('click', function(e) {
                         if (this.getAttribute('href') !== "#") {
                             e.preventDefault();
